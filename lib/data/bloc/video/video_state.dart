@@ -11,7 +11,8 @@ class VideoInitialState extends VideoState {}
 
 class VideoFetchSuccessState extends VideoState {
   final VideoModel videoModel;
-  VideoFetchSuccessState(this.videoModel);
+  final List<VideoFormatModel>? videoFormatModel;
+  VideoFetchSuccessState(this.videoModel, this.videoFormatModel);
 }
 
 class VideoFetchFailState extends VideoState {}

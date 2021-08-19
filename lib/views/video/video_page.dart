@@ -1,13 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
+import 'package:singingholic_app/data/models/video/video_formats.dart';
+import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/views/video/video_player.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
 import 'package:singingholic_app/widgets/app_scaffold.dart';
 import 'package:provider/provider.dart';
+import 'package:singingholic_app/widgets/image_not_found.dart';
 
 /// Video page
 class VideoPage extends StatefulWidget {
@@ -53,14 +57,15 @@ class _VideoPageState extends State<VideoPage> {
           return Center(child: AppCircularLoading());
         } else if (state is VideoFetchSuccessState) {
           // If get video success
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          return ListView(
+            shrinkWrap: true,
             children: [
-              _buildVideoPlayer(),
+              _buildVideoPlayer(
+                  videoModel: state.videoModel,
+                  videoFormats: state.videoFormatModel),
               _buildTitle(title: state.videoModel.name),
               _buildStatus(videoModel: state.videoModel),
-              Expanded(
-                  child: _buildTabBarController(videoModel: state.videoModel)),
+              _buildTabBarController(videoModel: state.videoModel),
             ],
           );
         } else {
@@ -75,11 +80,20 @@ class _VideoPageState extends State<VideoPage> {
   }
 
   /// Create video player
-  Widget _buildVideoPlayer() {
-    return VideoPlayerContainer(
-      videoUrl:
-          'https://data.mymp3app.com/720/rick-astley-never-gonna-give-you-up-(720p).mp4',
-    );
+  Widget _buildVideoPlayer(
+      {List<VideoFormatModel>? videoFormats, required VideoModel videoModel}) {
+    if (videoFormats == null || videoFormats.length == 0) {
+      print('this video is locked');
+      return _buildVideoLocked(
+          thumbnail: PathUtils.getImagePath(
+              52, 'video', videoModel.id, videoModel.imagePaths?[0]));
+    } else {
+      VideoFormatModel videoFormat = videoFormats.last;
+      String videoUrl = videoFormat.url;
+      return VideoPlayerContainer(
+        videoUrl: videoUrl,
+      );
+    }
   }
 
   /// Create video title
@@ -139,7 +153,8 @@ class _VideoPageState extends State<VideoPage> {
 
   /// Create view for each tab
   Widget _buildTabBarView({required VideoModel videoModel}) {
-    return Expanded(
+    return Container(
+      height: 500,
       child: TabBarView(children: [
         _buildDescription(videoModel: videoModel),
         _buildDiscussion(),
@@ -165,6 +180,15 @@ class _VideoPageState extends State<VideoPage> {
         'To be implemented',
         style: TextStyle(color: Colors.red),
       ),
+    );
+  }
+
+  /// TODO: Create video lock container
+  Widget _buildVideoLocked({required String thumbnail}) {
+    return CachedNetworkImage(
+      imageUrl: thumbnail,
+      placeholder: (context, url) => AppCircularLoading(),
+      errorWidget: (context, url, error) => ImageNotFound(),
     );
   }
 }

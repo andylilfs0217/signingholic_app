@@ -26,7 +26,7 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
       widget.videoUrl,
     );
     initializeVideoPlayerFuture = videoController.initialize();
-    videoController.setLooping(true);
+    videoController.setLooping(false);
   }
 
   @override
@@ -41,6 +41,7 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
             children: [
               AspectRatio(
                 aspectRatio: videoController.value.aspectRatio,
+                // aspectRatio: 16 / 9,
                 child: Stack(children: [
                   VideoPlayer(videoController),
                   // ClosedCaption(text: videoController.value.caption.text),
