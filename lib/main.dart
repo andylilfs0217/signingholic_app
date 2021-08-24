@@ -8,22 +8,10 @@ import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/bloc/video_list/video_list_bloc.dart';
 import 'package:singingholic_app/data/repo/login_repository.dart';
 import 'package:singingholic_app/data/repo/video_repository.dart';
+import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/providers/login_provider.dart';
 import 'package:singingholic_app/providers/video_provider.dart';
 import 'package:singingholic_app/routes/app_router.dart';
-
-/// Environment stages
-enum EnvironmentStage {
-  development,
-  staging,
-  production,
-}
-
-const Map<EnvironmentStage, String> ENV_PATHS = {
-  EnvironmentStage.development: 'env/development.env',
-  EnvironmentStage.staging: 'env/staging.env',
-  EnvironmentStage.production: 'env/production.env',
-};
 
 /// Main entry point
 void main() async {
@@ -32,9 +20,6 @@ void main() async {
   await EasyLocalization.ensureInitialized();
 
   /// Initialize dotenv
-  // const ENV = EnvironmentStage.development;
-  const ENV = EnvironmentStage.staging;
-  // const ENV = EnvironmentStage.production;
   await dotenv.load(
       fileName: ENV_PATHS[ENV] ?? ENV_PATHS[EnvironmentStage.development]!);
 

@@ -11,6 +11,10 @@ class LoginInitialState extends LoginState {}
 
 class LoginProcessingState extends LoginState {}
 
-class LoginSuccessState extends LoginState {}
+class LoginSuccessState extends LoginState {
+  final MemberModel memberModel;
+
+  LoginSuccessState({required this.memberModel}) : super();
+}
 
 class LoginFailedState extends LoginState {}

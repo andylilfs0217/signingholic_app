@@ -58,6 +58,9 @@ class _LoginPageState extends State<LoginPage> {
         _buildForm(),
         _buildWarnings(),
         _buildButtons(),
+        if (ENV == EnvironmentStage.development ||
+            ENV == EnvironmentStage.staging)
+          _buildOneTapLoginForDev(),
       ],
     );
   }
@@ -99,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: () {
             // TODO: Implement sign up button
             if (_formKey.currentState!.validate()) {
-              context.read<LoginBloc>().add(LoginSubmitted(
+              context.read<LoginBloc>().add(LoginSubmittedEvent(
                   email: _usernameController.text,
                   password: _passwordController.text));
             }
@@ -221,5 +224,17 @@ class _LoginPageState extends State<LoginPage> {
           return Container();
         },
         listener: (context, state) {});
+  }
+
+  /// A button for developer to login in one tap without filling email and password
+  ///
+  /// The function will login with default email and password
+  Widget _buildOneTapLoginForDev() {
+    return TextButton(
+        onPressed: () {
+          context.read<LoginBloc>().add(LoginSubmittedEvent(
+              email: "a.li@vizualize.net", password: "andyli0217"));
+        },
+        child: Text('One Tap Login'));
   }
 }

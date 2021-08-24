@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/repo/login_repository.dart';
 
 part 'login_event.dart';
@@ -16,13 +18,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> mapEventToState(
     LoginEvent event,
   ) async* {
-    if (event is LoginSubmitted) {
+    // Login submitted event
+    if (event is LoginSubmittedEvent) {
       try {
         yield LoginProcessingState();
         var response = await loginRepository.login(
             email: event.email, password: event.password);
         if (response['succeed'] != null && response['succeed']) {
-          yield LoginSuccessState();
+          MemberModel memberModel = MemberModel.fromJson(response['payload']);
+          yield LoginSuccessState(memberModel: memberModel);
         } else {
           yield LoginFailedState();
         }
@@ -30,6 +34,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield LoginFailedState();
         throw Exception(e);
       }
+    }
+    // Logout event
+    if (event is LogoutEvent) {
+      yield LoginInitialState();
     }
   }
 }
