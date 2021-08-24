@@ -4,6 +4,7 @@ import 'package:singingholic_app/data/bloc/video_list/video_list_bloc.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/routes/app_router.dart';
+import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
@@ -39,12 +40,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  @override
-  void dispose() {
-    context.read<VideoListBloc>().close();
-    super.dispose();
-  }
-
   /// Create home page body
   Widget _buildBody() {
     String title = 'Recent Online Class';
@@ -55,8 +50,8 @@ class _HomePageState extends State<HomePage> {
         _buildHorizontalList(
             title: title,
             seeAll: () {
-              Navigator.of(context).pushNamed(AppRoute.VIDEO_LIST,
-                  arguments: VideoListArguments(title: title));
+              AppNavigator.goTo(context, AppRoute.VIDEO_LIST,
+                  args: VideoListArguments(title: title));
             },
             imageRatio: 16 / 9),
         _buildGridView(title: 'About Us', imageRatio: 1 / 1),
@@ -129,19 +124,31 @@ class _HomePageState extends State<HomePage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: state.videoList.results
-                  .map((e) => _buildItemCard(
-                      title: e.name ?? 'Title not found',
-                      imageUrl: PathUtils.getImagePath(
-                          52, 'video', e.id, e.imagePaths?[0]),
-                      categories: e.categories?.map((e) => e.name).toList(),
-                      tags: e.tags,
-                      imageRatio: imageRatio,
-                      onTap: () {
-                        Navigator.of(context).pushNamed(AppRoute.VIDEO,
-                            arguments: VideoArguments(id: e.id));
-                      }))
-                  .toList(),
+              children: state.videoList.results.map((e) {
+                // Add a tag "FREE" if the video is free
+                // Add a price if the video is not free
+                List tags = e.tags ?? [];
+                String? subtitle;
+                if (e.free != null && e.free!) {
+                  if (!tags.contains('FREE')) {
+                    tags.add('FREE');
+                  }
+                } else if (e.price != null && e.price! > 0) {
+                  subtitle = '\$${e.price}';
+                }
+                return _buildItemCard(
+                    title: e.name ?? 'Title not found',
+                    imageUrl: PathUtils.getImagePath(
+                        52, 'video', e.id, e.imagePaths?[0]),
+                    categories: e.categories?.map((e) => e.name).toList(),
+                    tags: e.tags,
+                    subtitle: subtitle,
+                    imageRatio: imageRatio,
+                    onTap: () {
+                      AppNavigator.goTo(context, AppRoute.VIDEO,
+                          args: VideoArguments(id: e.id));
+                    });
+              }).toList(),
             ),
           );
         } else {

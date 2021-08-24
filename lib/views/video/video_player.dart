@@ -65,12 +65,6 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
       },
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    videoController.dispose();
-  }
 }
 
 /// Controls Overlay (Play button)

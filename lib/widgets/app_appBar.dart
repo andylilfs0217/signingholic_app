@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   final AppBar appBar;
   final String title;
+  final bool hasCart;
 
-  const AppAppBar({Key? key, required this.appBar, this.title = ''})
+  const AppAppBar(
+      {Key? key, required this.appBar, this.title = '', this.hasCart = true})
       : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: true,
       title: Text(title),
-      actions: [_buildShoppingCartIcon()],
+      actions: [if (hasCart) _buildShoppingCartIcon()],
     );
   }
 

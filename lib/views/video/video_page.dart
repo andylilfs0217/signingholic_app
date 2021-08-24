@@ -42,12 +42,6 @@ class _VideoPageState extends State<VideoPage> {
     );
   }
 
-  @override
-  void dispose() {
-    context.read<VideoBloc>().close();
-    super.dispose();
-  }
-
   /// Create page body
   Widget _buildBody() {
     return BlocBuilder<VideoBloc, VideoState>(
@@ -183,12 +177,30 @@ class _VideoPageState extends State<VideoPage> {
     );
   }
 
-  /// TODO: Create video lock container
+  /// Create video lock container
   Widget _buildVideoLocked({required String thumbnail}) {
     return CachedNetworkImage(
       imageUrl: thumbnail,
       placeholder: (context, url) => AppCircularLoading(),
       errorWidget: (context, url, error) => ImageNotFound(),
+      imageBuilder: (context, imageProvider) => Container(
+        height: 250,
+        child: Center(
+            child: Icon(
+          Icons.lock,
+          size: 100,
+          color: Colors.white54,
+        )),
+        decoration: BoxDecoration(
+          color: Colors.grey,
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.cover,
+            colorFilter: new ColorFilter.mode(
+                Colors.black.withOpacity(0.2), BlendMode.dstATop),
+          ),
+        ),
+      ),
     );
   }
 }

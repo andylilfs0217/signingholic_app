@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/routes/app_router.dart';
+import 'package:singingholic_app/utils/app_navigator.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -43,6 +44,7 @@ class _AppDrawerState extends State<AppDrawer> {
         onPressed: () {
           // TODO: implement login or sign up function
           print('Login/Sign up');
+          AppNavigator.drawerGoTo(context, AppRoute.LOGIN);
         },
         child: const Text('Login/Sign up'),
       ),
@@ -72,9 +74,7 @@ class _AppDrawerState extends State<AppDrawer> {
     return AppDrawerListTile(
       title: 'Home',
       onTap: () {
-        // TODO: Implement navigation to home page
-        print('Go to home page');
-        Navigator.of(context).popAndPushNamed(AppRoute.HOME);
+        AppNavigator.drawerGoTo(context, AppRoute.HOME);
       },
     );
   }
@@ -132,8 +132,12 @@ class AppDrawerListTile extends StatelessWidget {
   /// Action of List Tile tap
   final Function()? onTap;
 
+  /// Show if selected
+  final bool selected;
+
   /// Create App Drawer List Tile
-  const AppDrawerListTile({Key? key, this.title = '', this.onTap})
+  const AppDrawerListTile(
+      {Key? key, this.title = '', this.onTap, this.selected = false})
       : super(key: key);
 
   @override
@@ -141,6 +145,7 @@ class AppDrawerListTile extends StatelessWidget {
     return ListTile(
       title: Text(title),
       onTap: onTap,
+      selected: selected,
     );
   }
 }
