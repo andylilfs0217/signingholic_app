@@ -4,6 +4,7 @@ import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/views/error/page_not_found_page.dart';
 import 'package:singingholic_app/views/home/home_page.dart';
 import 'package:singingholic_app/views/login/login_page.dart';
+import 'package:singingholic_app/views/shopping_cart/shopping_cart_page.dart';
 import 'package:singingholic_app/views/upload/upload_page.dart';
 import 'package:singingholic_app/views/video/video_list_page.dart';
 import 'package:singingholic_app/views/video/video_page.dart';
@@ -15,6 +16,7 @@ class AppRoute {
   static const VIDEO = '/video';
   static const UPLOAD = '/upload';
   static const VIDEO_LIST = '/video-list';
+  static const SHOPPING_CART = '/shopping_cart';
 }
 
 class AppRouteGenerator {
@@ -35,6 +37,8 @@ class AppRouteGenerator {
         final args = settings.arguments as VideoListArguments;
         return MaterialPageRoute(
             builder: (_) => VideoListPage(title: args.title));
+      case AppRoute.SHOPPING_CART:
+        return MaterialPageRoute(builder: (_) => ShoppingCartPage());
       default:
         return MaterialPageRoute(builder: (_) => PageNotFoundPage());
     }

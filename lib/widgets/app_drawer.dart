@@ -4,6 +4,7 @@ import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/routes/app_router.dart';
 import 'package:singingholic_app/utils/app_navigator.dart';
+import 'package:singingholic_app/widgets/app_login_button.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -58,14 +59,7 @@ class _AppDrawerState extends State<AppDrawer> {
   /// Craete Login button in the drawer header
   Widget _buildLoginButton() {
     return Center(
-      child: OutlinedButton(
-        onPressed: () {
-          // TODO: implement login or sign up function
-          print('Login/Sign up');
-          AppNavigator.drawerGoTo(context, AppRoute.LOGIN);
-        },
-        child: const Text('Login/Sign up'),
-      ),
+      child: AppLoginButton(),
     );
   }
 

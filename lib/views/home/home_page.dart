@@ -218,12 +218,6 @@ class _HomePageState extends State<HomePage> {
           imageUrl: 'https://picsum.photos/id/238/200/200',
           subtitle: 'Singing Tutor',
         ),
-        _buildItemCard(
-          title: 'Andy Li',
-          imageRatio: imageRatio,
-          imageUrl: 'https://picsum.photos/id/239/200/200',
-          subtitle: 'Singing Tutor',
-        ),
       ],
     );
   }

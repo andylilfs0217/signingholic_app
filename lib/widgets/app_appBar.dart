@@ -1,4 +1,12 @@
+import 'dart:convert';
+
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:singingholic_app/assets/app_theme.dart';
+import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
+import 'package:singingholic_app/routes/app_router.dart';
+import 'package:singingholic_app/utils/app_navigator.dart';
 
 /// Base AppBar of the App
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -23,11 +31,32 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildShoppingCartIcon() {
-    return IconButton(
-        icon: Icon(Icons.shopping_cart),
-        onPressed: () {
-          // TODO: Implement navigation to shopping cart
-          print('Go to shopping cart page');
-        });
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        int qty = 0;
+        if (state is LoginSuccessState &&
+            state.memberModel.productCart != null) {
+          var productCart = jsonDecode(state.memberModel.productCart!);
+          if (productCart['qtyTotal'] != null) {
+            qty = productCart['qtyTotal'];
+          }
+        }
+        return IconButton(
+            icon: Badge(
+              child: Icon(Icons.shopping_cart),
+              toAnimate: false,
+              shape: BadgeShape.circle,
+              badgeColor: AppThemeColor.appSecondaryColor,
+              badgeContent:
+                  Text(qty.toString(), style: TextStyle(color: Colors.white)),
+              showBadge: state is LoginSuccessState,
+            ),
+            onPressed: () {
+              // TODO: Implement navigation to shopping cart
+              print('Go to shopping cart page');
+              AppNavigator.goTo(context, AppRoute.SHOPPING_CART);
+            });
+      },
+    );
   }
 }
