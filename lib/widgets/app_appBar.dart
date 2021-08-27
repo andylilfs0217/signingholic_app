@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,12 +32,11 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
         int qty = 0;
-        if (state is LoginSuccessState &&
-            state.memberModel.productCart != null) {
-          var productCart = jsonDecode(state.memberModel.productCart!);
-          if (productCart['qtyTotal'] != null) {
-            qty = productCart['qtyTotal'];
-          }
+        if (state is LoginSuccessState) {
+          // Add number of products in cart
+          qty += state.memberModel.productCart?.qtyTotal ?? 0;
+          // Add number of videos in cart
+          qty += state.memberModel.videoCart?.items?.length ?? 0;
         }
         return IconButton(
             icon: Badge(
@@ -47,13 +44,13 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
               toAnimate: false,
               shape: BadgeShape.circle,
               badgeColor: AppThemeColor.appSecondaryColor,
-              badgeContent:
-                  Text(qty.toString(), style: TextStyle(color: Colors.white)),
+              // If the member hasn't logged in, badge won't be shown
+              badgeContent: Text(
+                  state is LoginSuccessState ? qty.toString() : '',
+                  style: TextStyle(color: Colors.white)),
               showBadge: state is LoginSuccessState,
             ),
             onPressed: () {
-              // TODO: Implement navigation to shopping cart
-              print('Go to shopping cart page');
               AppNavigator.goTo(context, AppRoute.SHOPPING_CART);
             });
       },

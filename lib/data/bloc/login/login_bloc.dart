@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:singingholic_app/data/bloc/cart/cart_bloc.dart';
 import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/repo/login_repository.dart';
 
@@ -37,6 +37,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
     // Logout event
     if (event is LogoutEvent) {
+      // TODO: implement logout api
       yield LoginInitialState();
     }
   }

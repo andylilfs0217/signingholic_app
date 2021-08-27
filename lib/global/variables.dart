@@ -22,6 +22,7 @@ const ENV = EnvironmentStage.staging;
 /// Global variables
 int bottomNavBarIndex = 0;
 bool hideNavBar = false;
+int accountId = 52;
 
 /// Global paths
 const String LOGO_PATH = 'assets/icons/app_logo.jpg';

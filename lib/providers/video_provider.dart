@@ -5,6 +5,7 @@ import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/data/models/video/video_list.dart';
 import 'package:http/http.dart' as http;
+import 'package:singingholic_app/global/variables.dart';
 
 class VideoProvider {
   VideoProvider();
@@ -17,7 +18,7 @@ class VideoProvider {
         "Content-Type": "application/json",
       };
       Object body = jsonEncode({
-        "ctx": {"accountId": 52},
+        "ctx": {"accountId": accountId},
         "itemFilter": "",
         "itemSort": "",
         "itemCategories": []
@@ -39,7 +40,7 @@ class VideoProvider {
         "Content-Type": "application/json",
       };
       Object body = jsonEncode({
-        "ctx": {"accountId": 52},
+        "ctx": {"accountId": accountId},
         'member': null,
       });
       final response =
@@ -60,7 +61,7 @@ class VideoProvider {
         "Content-Type": "application/json",
       };
       Object body = jsonEncode({
-        "ctx": {"accountId": 52},
+        "ctx": {"accountId": accountId},
         'member': null,
       });
       final response =

@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:singingholic_app/data/models/product/product_cart.dart';
+import 'package:singingholic_app/data/models/video/video_cart.dart';
+
 class MemberModel {
-  int? id;
+  int id;
   bool? active;
   String? name;
   String? email;
@@ -14,18 +19,21 @@ class MemberModel {
   String? createTime;
   String? updateTime;
   int? points;
-  String? productCart;
+  ProductCartModel? productCart;
   String? productCartDate;
   bool? productCartSent;
   String? eventCart;
   String? eventCartDate;
   bool? eventCartSent;
+  VideoCartModel? videoCart;
+  String? videoCartDate;
+  bool? videoCartSent;
   String? resetDate;
   String? resetToken;
   Object? tier;
 
   MemberModel(
-      {this.id,
+      {required this.id,
       this.active,
       this.name,
       this.email,
@@ -46,6 +54,9 @@ class MemberModel {
       this.eventCart,
       this.eventCartDate,
       this.eventCartSent,
+      this.videoCart,
+      this.videoCartDate,
+      this.videoCartSent,
       this.resetDate,
       this.resetToken,
       this.tier});
@@ -66,12 +77,19 @@ class MemberModel {
         createTime = json['createTime'],
         updateTime = json['updateTime'],
         points = json['points'],
-        productCart = json['productCart'],
+        productCart = json['productCart'] != null
+            ? ProductCartModel.fromJson(jsonDecode(json['productCart']))
+            : null,
         productCartDate = json['productCartDate'],
         productCartSent = json['productCartSent'],
         eventCart = json['eventCart'],
         eventCartDate = json['eventCartDate'],
         eventCartSent = json['eventCartSent'],
+        videoCart = json['videoCart'] != null
+            ? VideoCartModel.fromJson(jsonDecode(json['videoCart']))
+            : null,
+        videoCartDate = json['videoCartDate'],
+        videoCartSent = json['videoCartSent'],
         resetDate = json['resetDate'],
         resetToken = json['resetToken'],
         tier = json['tier'];
@@ -93,12 +111,17 @@ class MemberModel {
     data['createTime'] = this.createTime;
     data['updateTime'] = this.updateTime;
     data['points'] = this.points;
-    data['productCart'] = this.productCart;
+    data['productCart'] =
+        this.productCart != null ? this.productCart!.toJson() : null;
     data['productCartDate'] = this.productCartDate;
     data['productCartSent'] = this.productCartSent;
     data['eventCart'] = this.eventCart;
     data['eventCartDate'] = this.eventCartDate;
     data['eventCartSent'] = this.eventCartSent;
+    data['videoCart'] =
+        this.videoCart != null ? this.videoCart!.toJson() : null;
+    data['videoCartDate'] = this.videoCartDate;
+    data['videoCartSent'] = this.videoCartSent;
     data['resetDate'] = this.resetDate;
     data['resetToken'] = this.resetToken;
     data['tier'] = this.tier;

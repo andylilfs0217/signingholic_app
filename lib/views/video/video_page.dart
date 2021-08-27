@@ -5,6 +5,7 @@ import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
+import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/views/video/video_player.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
@@ -79,8 +80,8 @@ class _VideoPageState extends State<VideoPage> {
     if (videoFormats == null || videoFormats.length == 0) {
       print('this video is locked');
       return _buildVideoLocked(
-          thumbnail: PathUtils.getImagePath(
-              52, 'video', videoModel.id, videoModel.imagePaths?[0]));
+          thumbnail: PathUtils.getImagePathWithId(
+              accountId, 'video', videoModel.id, videoModel.imagePaths?[0]));
     } else {
       VideoFormatModel videoFormat = videoFormats.last;
       String videoUrl = videoFormat.url;

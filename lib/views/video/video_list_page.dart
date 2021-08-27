@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:singingholic_app/data/bloc/video_list/video_list_bloc.dart';
+import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/routes/app_router.dart';
 import 'package:singingholic_app/utils/app_navigator.dart';
@@ -75,8 +76,8 @@ class _VideoListPageState extends State<VideoListPage> {
               }
               return _buildItemCard(
                   title: e.name ?? 'Title not found',
-                  imageUrl: PathUtils.getImagePath(
-                      52, 'video', e.id, e.imagePaths?[0]),
+                  imageUrl: PathUtils.getImagePathWithId(
+                      accountId, 'video', e.id, e.imagePaths?[0]),
                   categories: e.categories?.map((e) => e.name).toList(),
                   tags: e.tags,
                   subtitle: subtitle,
