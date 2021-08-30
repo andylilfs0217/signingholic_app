@@ -28,4 +28,13 @@ class CartRepository {
       throw Exception(e);
     }
   }
+
+  /// Change product cart
+  Future<dynamic> changeVideoCart(VideoCartModel videoCartModel) async {
+    try {
+      await this.cartProvider.changeVideoCart(videoCartModel);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

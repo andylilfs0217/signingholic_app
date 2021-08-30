@@ -21,39 +21,47 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Stream<CartState> mapEventToState(
     CartEvent event,
   ) async* {
-    if (event is GetProductCartDetailsEvent) {
-      try {
-        yield GettingCartProductState();
-        var response =
-            await cartRepository.updateProductCart(event.productCartModel);
-        if (response['succeed'] != null && response['succeed']) {
-          List<ProductItemModel> productItems = response['payload']['products']
-              .map<ProductItemModel>((e) => ProductItemModel.fromJson(e))
-              .toList();
-          yield GetCartProductSuccessState(productItems: productItems);
-        } else {
-          yield GetCartProductFailedState();
-        }
-      } catch (e) {
-        yield GetCartProductFailedState();
-        throw Exception(e);
-      }
-    }
+    // if (event is GetProductCartDetailsEvent) {
+    //   try {
+    //     yield GettingCartProductState();
+    //     var response =
+    //         await cartRepository.updateProductCart(event.productCartModel);
+    //     if (response['succeed'] != null && response['succeed']) {
+    //       List<ProductItemModel> productItems = response['payload']['products']
+    //           .map<ProductItemModel>((e) => ProductItemModel.fromJson(e))
+    //           .toList();
+    //       yield GetCartProductSuccessState(productItems: productItems);
+    //     } else {
+    //       yield GetCartProductFailedState();
+    //     }
+    //   } catch (e) {
+    //     yield GetCartProductFailedState();
+    //     throw Exception(e);
+    //   }
+    // }
     if (event is GetVideoCartDetailsEvent) {
       try {
         yield GettingCartVideoState();
         var response =
             await cartRepository.updateVideoCart(event.videoCartModel);
         if (response['succeed'] != null && response['succeed']) {
-          List<VideoItemModel> videoItems = response['payload']['videos']
-              .map<VideoItemModel>((e) => VideoItemModel.fromJson(e))
-              .toList();
+          List<VideoItemModel> videoItems = response['payload']?['videos']
+                  ?.map<VideoItemModel>((e) => VideoItemModel.fromJson(e))
+                  .toList() ??
+              [];
           yield GetCartVideoSuccessState(videoItems: videoItems);
         } else {
           yield GetCartVideoFailedState();
         }
       } catch (e) {
         yield GetCartVideoFailedState();
+        throw Exception(e);
+      }
+    }
+    if (event is UpdateVideoCartEvent) {
+      try {
+        await cartRepository.changeVideoCart(event.videoCartModel);
+      } catch (e) {
         throw Exception(e);
       }
     }

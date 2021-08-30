@@ -6,7 +6,7 @@ class AppThemeColor {
   static final Color appPrimaryColor = Colors.orange;
 
   /// Secondary theme color of the app
-  static final Color appSecondaryColor = Colors.blue;
+  static final Color appSecondaryColor = Colors.black;
 
   /// Search bar color of the app
   static final Color? searchBarColor = Colors.grey[300];
@@ -56,13 +56,8 @@ final ThemeData appThemeData = ThemeData(
           borderRadius: BorderRadius.all(
               Radius.circular(AppThemeSize.cardBorderRadius)))),
   textTheme: TextTheme(),
-  // chipTheme: ChipThemeData(
-  //     backgroundColor: null,
-  //     brightness: null,
-  //     disabledColor: null,
-  //     labelStyle: null,
-  //     padding: null,
-  //     secondaryLabelStyle: null,
-  //     secondarySelectedColor: null,
-  //     selectedColor: null),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(
+              AppThemeColor.appSecondaryColor))),
 );

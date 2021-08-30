@@ -9,16 +9,16 @@ abstract class CartState extends Equatable {
 
 class CartInitialState extends CartState {}
 
-class GettingCartProductState extends CartState {}
+// class GettingCartProductState extends CartState {}
 
-class GetCartProductSuccessState extends CartState {
-  /// Product Item
-  final List<ProductItemModel> productItems;
+// class GetCartProductSuccessState extends CartState {
+//   /// Product Item
+//   final List<ProductItemModel> productItems;
 
-  GetCartProductSuccessState({required this.productItems});
-}
+//   GetCartProductSuccessState({required this.productItems});
+// }
 
-class GetCartProductFailedState extends CartState {}
+// class GetCartProductFailedState extends CartState {}
 
 class GettingCartVideoState extends CartState {}
 

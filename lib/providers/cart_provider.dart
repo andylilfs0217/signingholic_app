@@ -41,4 +41,27 @@ class CartProvider {
       throw Exception(e);
     }
   }
+
+  Future<dynamic> changeVideoCart(VideoCartModel videoCartModel) async {
+    try {
+      String apiUrl =
+          dotenv.get('THINKSHOPS_URL') + '/public/ec/member/cart/video';
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+      };
+      Object body = jsonEncode({
+        'ctx': {'accountId': accountId},
+        'body': videoCartModel.toJson()
+      });
+      final response =
+          await http.post(Uri.parse(apiUrl), headers: headers, body: body);
+      var result = jsonDecode(response.body);
+      // if (!result['succeed']) {
+      //   throw Exception('Update video cart failed');
+      // }
+      return result;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

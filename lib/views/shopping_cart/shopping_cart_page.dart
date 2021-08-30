@@ -25,7 +25,7 @@ class ShoppingCartPage extends StatefulWidget {
 
 class _ShoppingCartPageState extends State<ShoppingCartPage> {
   /// Product item list
-  ProductCartModel? productCart;
+  // ProductCartModel? productCart;
 
   /// Video item list
   VideoCartModel? videoCart;
@@ -46,7 +46,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
         if (state is LoginSuccessState) {
-          productCart = state.memberModel.productCart!;
+          // productCart = state.memberModel.productCart!;
           videoCart = state.memberModel.videoCart!;
           // context
           //     .read<CartBloc>()
@@ -56,14 +56,16 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
               .add(GetVideoCartDetailsEvent(videoCartModel: videoCart!));
 
           // If the member has logged in, show the shopping cart
-          return Column(
-            children: [
-              _buildProducts(),
-              Divider(),
-              _buildSummary(),
-              SizedBox(height: AppThemeSize.screenPaddingSize),
-            ],
-          );
+          return videoCart!.items!.isNotEmpty
+              ? Column(
+                  children: [
+                    _buildProducts(),
+                    Divider(),
+                    _buildSummary(),
+                    SizedBox(height: AppThemeSize.screenPaddingSize),
+                  ],
+                )
+              : _buildVideoCartEmpty();
         } else {
           // If the member hasn't logged in, tell him to log in
           return Center(
@@ -148,33 +150,33 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
     );
   }
 
-  Widget _buildProductCart() {
-    return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
-        List productCartItems = [];
-        if (state is GetCartProductSuccessState) {
-          for (var i = 0; i < productCart!.items!.length; i++) {
-            productCartItems.add(ShoppingCartProduct(
-              qty: productCart!.items![i].qty ?? 1,
-              price: productCart!.items![i].unit ?? 0,
-              discount: productCart!.items![i].discount,
-              discountedPrice: productCart!.items![i].unitDiscounted,
-              name: state.productItems[i].name ?? '',
-              imageUrl: PathUtils.getSiteImage(
-                  accountId, state.productItems[i].imagePaths?[0]),
-            ));
-          }
-        }
+  // Widget _buildProductCart() {
+  //   return BlocBuilder<CartBloc, CartState>(
+  //     builder: (context, state) {
+  //       List productCartItems = [];
+  //       if (state is GetCartProductSuccessState) {
+  //         for (var i = 0; i < productCart!.items!.length; i++) {
+  //           productCartItems.add(ShoppingCartProduct(
+  //             qty: productCart!.items![i].qty ?? 1,
+  //             price: productCart!.items![i].unit ?? 0,
+  //             discount: productCart!.items![i].discount,
+  //             discountedPrice: productCart!.items![i].unitDiscounted,
+  //             name: state.productItems[i].name ?? '',
+  //             imageUrl: PathUtils.getSiteImage(
+  //                 accountId, state.productItems[i].imagePaths?[0]),
+  //           ));
+  //         }
+  //       }
 
-        return Column(
-          children: [
-            Text('Product'),
-            ...productCartItems,
-          ],
-        );
-      },
-    );
-  }
+  //       return Column(
+  //         children: [
+  //           Text('Product'),
+  //           ...productCartItems,
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _buildVideoCart() {
     return BlocBuilder<CartBloc, CartState>(
@@ -183,6 +185,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
         if (state is GetCartVideoSuccessState) {
           for (var i = 0; i < videoCart!.items!.length; i++) {
             videoCartItems.add(ShoppingCartProduct(
+              key: Key('video_$i'),
               qty: videoCart!.items![i].qty ?? 1,
               price: videoCart!.items![i].unit ?? 0,
               discount: videoCart!.items![i].discount,
@@ -190,7 +193,16 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
               name: state.videoItems[i].name ?? '',
               imageUrl: PathUtils.getImagePathWithId(accountId, 'video',
                   state.videoItems[i].id, state.videoItems[i].imagePaths?[0]),
-              disableQtyChange: true,
+              isVideo: true,
+              onDelete: () {
+                setState(() {
+                  videoCart!.items!.removeAt(i);
+                  videoCartItems.removeAt(i);
+                  context
+                      .read<CartBloc>()
+                      .add(UpdateVideoCartEvent(videoCartModel: videoCart!));
+                });
+              },
             ));
           }
         }
@@ -205,6 +217,12 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildVideoCartEmpty() {
+    return Center(
+      child: Text('Your shopping cart is empty. Go shopping!'),
     );
   }
 }

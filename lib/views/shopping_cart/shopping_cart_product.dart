@@ -28,7 +28,10 @@ class ShoppingCartProduct extends StatefulWidget {
   final int qty;
 
   /// An indicator of disabling quantity change
-  final bool disableQtyChange;
+  final bool isVideo;
+
+  /// A function to be executed on delete
+  final Function()? onDelete;
 
   const ShoppingCartProduct({
     Key? key,
@@ -40,7 +43,8 @@ class ShoppingCartProduct extends StatefulWidget {
     this.qty = 1,
     this.discountedPrice,
     this.discount,
-    this.disableQtyChange = false,
+    this.isVideo = false,
+    this.onDelete,
   }) : super(key: key);
 
   @override
@@ -91,6 +95,7 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
       color: Colors.white,
       // Slidable item for deleting an item from cart
       child: Slidable(
+        key: widget.key,
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.25,
         child: Row(
@@ -105,9 +110,15 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
             caption: 'Delete',
             color: Colors.red,
             icon: Icons.delete,
-            onTap: () => print('Delete'),
+            onTap: widget.onDelete,
           ),
         ],
+        dismissal: SlidableDismissal(
+          child: SlidableDrawerDismissal(),
+          onDismissed: (actionType) {
+            widget.onDelete != null ? widget.onDelete!() : print('Delete item');
+          },
+        ),
       ),
     );
   }
@@ -201,27 +212,27 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
         // Minus
         GestureDetector(
           onTap: () {
-            if (!widget.disableQtyChange) {
+            if (!widget.isVideo) {
               setState(() {
                 if (count > 1) count--;
               });
             }
           },
           onLongPressStart: (details) {
-            if (!widget.disableQtyChange) {
+            if (!widget.isVideo) {
               _buttonPressed = true;
               _changeCounterWhilePressed(CounterMode.decrease);
             }
           },
           onLongPressEnd: (details) {
-            if (!widget.disableQtyChange) {
+            if (!widget.isVideo) {
               _buttonPressed = false;
             }
           },
           child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: count == 1 || widget.disableQtyChange
+                color: count == 1 || widget.isVideo
                     ? Colors.grey.shade300
                     : Colors.black,
               ),
@@ -242,27 +253,27 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
         // Add
         GestureDetector(
           onTap: () {
-            if (!widget.disableQtyChange) {
+            if (!widget.isVideo) {
               setState(() {
                 count++;
               });
             }
           },
           onLongPressStart: (details) {
-            if (!widget.disableQtyChange) {
+            if (!widget.isVideo) {
               _buttonPressed = true;
               _changeCounterWhilePressed(CounterMode.increase);
             }
           },
           onLongPressEnd: (details) {
-            if (!widget.disableQtyChange) {
+            if (!widget.isVideo) {
               _buttonPressed = false;
             }
           },
           child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: widget.disableQtyChange
+                color: widget.isVideo
                     ? Colors.grey.shade300
                     : AppThemeColor.appSecondaryColor,
               ),

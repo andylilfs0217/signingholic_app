@@ -52,15 +52,26 @@ class _VideoPageState extends State<VideoPage> {
           return Center(child: AppCircularLoading());
         } else if (state is VideoFetchSuccessState) {
           // If get video success
-          return ListView(
-            shrinkWrap: true,
+          return Column(
             children: [
-              _buildVideoPlayer(
-                  videoModel: state.videoModel,
-                  videoFormats: state.videoFormatModel),
-              _buildTitle(title: state.videoModel.name),
-              _buildStatus(videoModel: state.videoModel),
-              _buildTabBarController(videoModel: state.videoModel),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildVideoPlayer(
+                          videoModel: state.videoModel,
+                          videoFormats: state.videoFormatModel),
+                      _buildTitle(title: state.videoModel.name),
+                      _buildStatus(videoModel: state.videoModel),
+                      _buildTabBarController(videoModel: state.videoModel),
+                    ],
+                  ),
+                ),
+              ),
+              if (state.videoFormatModel == null ||
+                  state.videoFormatModel!.length == 0)
+                _buildButtonBar(videoModel: state.videoModel),
             ],
           );
         } else {
@@ -78,7 +89,6 @@ class _VideoPageState extends State<VideoPage> {
   Widget _buildVideoPlayer(
       {List<VideoFormatModel>? videoFormats, required VideoModel videoModel}) {
     if (videoFormats == null || videoFormats.length == 0) {
-      print('this video is locked');
       return _buildVideoLocked(
           thumbnail: PathUtils.getImagePathWithId(
               accountId, 'video', videoModel.id, videoModel.imagePaths?[0]));
@@ -202,6 +212,25 @@ class _VideoPageState extends State<VideoPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildButtonBar({VideoModel? videoModel}) {
+    return Column(
+      children: [
+        Divider(),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+              onPressed: () {
+                // TODO: Add video to cart
+                print('Add to cart');
+              },
+              icon: Icon(Icons.shopping_cart),
+              label: Text('Add to cart')),
+        ),
+        SizedBox(height: 10),
+      ],
     );
   }
 }

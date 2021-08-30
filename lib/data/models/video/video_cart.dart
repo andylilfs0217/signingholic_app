@@ -28,6 +28,6 @@ class VideoCartModel {
         'gift': this.gifts,
         'itemTotal': this.itemTotal,
         'items': this.items,
-        'gifts': this.gifts,
+        'usePoints': this.usePoints,
       };
 }
