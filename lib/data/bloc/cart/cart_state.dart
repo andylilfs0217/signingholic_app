@@ -19,3 +19,14 @@ class GetCartProductSuccessState extends CartState {
 }
 
 class GetCartProductFailedState extends CartState {}
+
+class GettingCartVideoState extends CartState {}
+
+class GetCartVideoSuccessState extends CartState {
+  /// Video item
+  final List<VideoItemModel> videoItems;
+
+  GetCartVideoSuccessState({required this.videoItems});
+}
+
+class GetCartVideoFailedState extends CartState {}

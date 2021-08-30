@@ -2,10 +2,10 @@ import 'package:singingholic_app/data/models/product/product_cart_item.dart';
 
 class ProductCartModel {
   final List<ProductCartItemModel>? gifts;
-  final int? itemTotal;
+  final num? itemTotal;
   final List<ProductCartItemModel>? items;
   final int? qtyTotal;
-  final int? usePoints;
+  final num? usePoints;
 
   ProductCartModel({
     this.itemTotal,

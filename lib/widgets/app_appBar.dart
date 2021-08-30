@@ -34,7 +34,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
         int qty = 0;
         if (state is LoginSuccessState) {
           // Add number of products in cart
-          qty += state.memberModel.productCart?.qtyTotal ?? 0;
+          // qty += state.memberModel.productCart?.qtyTotal ?? 0; // Do not implement product yet
           // Add number of videos in cart
           qty += state.memberModel.videoCart?.items?.length ?? 0;
         }

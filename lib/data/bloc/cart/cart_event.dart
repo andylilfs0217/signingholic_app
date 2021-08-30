@@ -14,4 +14,9 @@ class GetProductCartDetailsEvent extends CartEvent {
   GetProductCartDetailsEvent({required this.productCartModel});
 }
 
-class GetVideoCartDetailsEvent extends CartEvent {}
+class GetVideoCartDetailsEvent extends CartEvent {
+  /// Video cart model
+  final VideoCartModel videoCartModel;
+
+  GetVideoCartDetailsEvent({required this.videoCartModel});
+}

@@ -8,6 +8,8 @@ import 'package:singingholic_app/data/models/product/product_cart_item.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
 import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 import 'package:singingholic_app/global/variables.dart';
+import 'package:singingholic_app/routes/app_router.dart';
+import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/views/shopping_cart/shopping_cart_product.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
@@ -46,9 +48,12 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
         if (state is LoginSuccessState) {
           productCart = state.memberModel.productCart!;
           videoCart = state.memberModel.videoCart!;
+          // context
+          //     .read<CartBloc>()
+          //     .add(GetProductCartDetailsEvent(productCartModel: productCart!));
           context
               .read<CartBloc>()
-              .add(GetProductCartDetailsEvent(productCartModel: productCart!));
+              .add(GetVideoCartDetailsEvent(videoCartModel: videoCart!));
 
           // If the member has logged in, show the shopping cart
           return Column(
@@ -85,8 +90,8 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
             if (state is LoginSuccessState) {
               return Column(
                 children: [
-                  if ((state.memberModel.productCart?.items?.length ?? 0) != 0)
-                    _buildProductCart(),
+                  // if ((state.memberModel.productCart?.items?.length ?? 0) != 0)
+                  //   _buildProductCart(),
                   if ((state.memberModel.videoCart?.items?.length ?? 0) != 0)
                     _buildVideoCart(),
                 ],
@@ -102,19 +107,44 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
   /// Show shopping cart summary
   Widget _buildSummary() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppThemeSize.screenPaddingSize),
-      child: Row(
-        children: [
-          Expanded(child: Container()),
-          // Checkout button
-          ElevatedButton(
-              onPressed: () {
-                print('Check out');
-              },
-              child: Text('Checkout')),
-        ],
-      ),
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        num subTotal =
+            // (productCart?.itemTotal ?? 0) +  // Do not implement product yet
+            (videoCart?.itemTotal ?? 0);
+        return Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: AppThemeSize.screenPaddingSize),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Subtotal:',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    ),
+                    Text(
+                      '\$${subTotal.toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.headline6,
+                    )
+                  ],
+                ),
+                SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      AppNavigator.goTo(context, AppRoute.CHECKOUT);
+                    },
+                    icon: Icon(Icons.shopping_basket),
+                    label: Text('Checkout'),
+                  ),
+                ),
+              ],
+            ));
+      },
     );
   }
 
@@ -147,19 +177,34 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
   }
 
   Widget _buildVideoCart() {
-    return Column(
-      children: [
-        Text('Video'),
-        // if (state is LoginSuccessState)
-        //   ...state.memberModel.videoCart!.items!
-        //       .map((e) => ShoppingCartProduct(
-        //             qty: e.qty ?? 1,
-        //             price: e.unit ?? 0,
-        //             discountedPrice: e.unitDiscounted,
-        //             name: e.video!.id.toString(),
-        //           ))
-        //       .toList(),
-      ],
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        List videoCartItems = [];
+        if (state is GetCartVideoSuccessState) {
+          for (var i = 0; i < videoCart!.items!.length; i++) {
+            videoCartItems.add(ShoppingCartProduct(
+              qty: videoCart!.items![i].qty ?? 1,
+              price: videoCart!.items![i].unit ?? 0,
+              discount: videoCart!.items![i].discount,
+              discountedPrice: videoCart!.items![i].unitDiscounted,
+              name: state.videoItems[i].name ?? '',
+              imageUrl: PathUtils.getImagePathWithId(accountId, 'video',
+                  state.videoItems[i].id, state.videoItems[i].imagePaths?[0]),
+              disableQtyChange: true,
+            ));
+          }
+        }
+
+        return Column(
+          children: [
+            Text(
+              'Videos',
+              style: Theme.of(context).textTheme.headline5,
+            ),
+            ...videoCartItems,
+          ],
+        );
+      },
     );
   }
 }

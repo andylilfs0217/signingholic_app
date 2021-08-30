@@ -3,9 +3,9 @@ import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 
 class VideoCartModel {
   final List<VideoCartItemModel>? gifts;
-  final int? itemTotal;
+  final num? itemTotal;
   final List<VideoCartItemModel>? items;
-  final int? usePoints;
+  final num? usePoints;
 
   VideoCartModel({
     this.itemTotal,

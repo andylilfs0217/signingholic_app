@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
+import 'package:singingholic_app/widgets/app_circular_loading.dart';
 
 /// Shopping cart item
 class ShoppingCartProduct extends StatefulWidget {
@@ -26,6 +27,9 @@ class ShoppingCartProduct extends StatefulWidget {
   /// Quantity of the product in cart
   final int qty;
 
+  /// An indicator of disabling quantity change
+  final bool disableQtyChange;
+
   const ShoppingCartProduct({
     Key? key,
     this.imageUrl =
@@ -36,6 +40,7 @@ class ShoppingCartProduct extends StatefulWidget {
     this.qty = 1,
     this.discountedPrice,
     this.discount,
+    this.disableQtyChange = false,
   }) : super(key: key);
 
   @override
@@ -113,6 +118,8 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
       aspectRatio: 1 / 1,
       child: CachedNetworkImage(
         imageUrl: widget.imageUrl,
+        placeholder: (context, url) => AppCircularLoading(),
+        errorWidget: (context, url, error) => Icon(Icons.error),
       ),
     );
   }
@@ -194,21 +201,29 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
         // Minus
         GestureDetector(
           onTap: () {
-            setState(() {
-              if (count > 1) count--;
-            });
+            if (!widget.disableQtyChange) {
+              setState(() {
+                if (count > 1) count--;
+              });
+            }
           },
           onLongPressStart: (details) {
-            _buttonPressed = true;
-            _changeCounterWhilePressed(CounterMode.decrease);
+            if (!widget.disableQtyChange) {
+              _buttonPressed = true;
+              _changeCounterWhilePressed(CounterMode.decrease);
+            }
           },
           onLongPressEnd: (details) {
-            _buttonPressed = false;
+            if (!widget.disableQtyChange) {
+              _buttonPressed = false;
+            }
           },
           child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: count == 1 ? Colors.grey.shade300 : Colors.black,
+                color: count == 1 || widget.disableQtyChange
+                    ? Colors.grey.shade300
+                    : Colors.black,
               ),
               width: 30,
               child: AspectRatio(
@@ -227,21 +242,29 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
         // Add
         GestureDetector(
           onTap: () {
-            setState(() {
-              count++;
-            });
+            if (!widget.disableQtyChange) {
+              setState(() {
+                count++;
+              });
+            }
           },
           onLongPressStart: (details) {
-            _buttonPressed = true;
-            _changeCounterWhilePressed(CounterMode.increase);
+            if (!widget.disableQtyChange) {
+              _buttonPressed = true;
+              _changeCounterWhilePressed(CounterMode.increase);
+            }
           },
           onLongPressEnd: (details) {
-            _buttonPressed = false;
+            if (!widget.disableQtyChange) {
+              _buttonPressed = false;
+            }
           },
           child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: AppThemeColor.appSecondaryColor,
+                color: widget.disableQtyChange
+                    ? Colors.grey.shade300
+                    : AppThemeColor.appSecondaryColor,
               ),
               width: 30,
               child: AspectRatio(

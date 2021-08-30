@@ -5,6 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:singingholic_app/data/models/product/product_cart.dart';
 import 'package:singingholic_app/data/models/product/product_item.dart';
+import 'package:singingholic_app/data/models/video/video_cart.dart';
+import 'package:singingholic_app/data/models/video/video_item.dart';
 import 'package:singingholic_app/data/repo/cart_repository.dart';
 
 part 'cart_event.dart';
@@ -37,6 +39,23 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         throw Exception(e);
       }
     }
-    if (event is GetVideoCartDetailsEvent) {}
+    if (event is GetVideoCartDetailsEvent) {
+      try {
+        yield GettingCartVideoState();
+        var response =
+            await cartRepository.updateVideoCart(event.videoCartModel);
+        if (response['succeed'] != null && response['succeed']) {
+          List<VideoItemModel> videoItems = response['payload']['videos']
+              .map<VideoItemModel>((e) => VideoItemModel.fromJson(e))
+              .toList();
+          yield GetCartVideoSuccessState(videoItems: videoItems);
+        } else {
+          yield GetCartVideoFailedState();
+        }
+      } catch (e) {
+        yield GetCartVideoFailedState();
+        throw Exception(e);
+      }
+    }
   }
 }

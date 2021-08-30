@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:singingholic_app/routes/app_arguments.dart';
+import 'package:singingholic_app/views/checkout/checkout_page.dart';
 import 'package:singingholic_app/views/error/page_not_found_page.dart';
 import 'package:singingholic_app/views/home/home_page.dart';
 import 'package:singingholic_app/views/login/login_page.dart';
@@ -17,6 +18,7 @@ class AppRoute {
   static const UPLOAD = '/upload';
   static const VIDEO_LIST = '/video-list';
   static const SHOPPING_CART = '/shopping_cart';
+  static const CHECKOUT = '/checkout';
 }
 
 class AppRouteGenerator {
@@ -39,6 +41,8 @@ class AppRouteGenerator {
             builder: (_) => VideoListPage(title: args.title));
       case AppRoute.SHOPPING_CART:
         return MaterialPageRoute(builder: (_) => ShoppingCartPage());
+      case AppRoute.CHECKOUT:
+        return MaterialPageRoute(builder: (_) => CheckoutPage());
       default:
         return MaterialPageRoute(builder: (_) => PageNotFoundPage());
     }
