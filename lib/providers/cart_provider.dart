@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:singingholic_app/data/models/product/product_cart.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
@@ -44,10 +45,13 @@ class CartProvider {
 
   Future<dynamic> changeVideoCart(VideoCartModel videoCartModel) async {
     try {
+      var storage = FlutterSecureStorage();
+      var xsession = await storage.read(key: 'xsession');
       String apiUrl =
           dotenv.get('THINKSHOPS_URL') + '/public/ec/member/cart/video';
       Map<String, String> headers = {
         "Content-Type": "application/json",
+        "Cookie": "xsession=$xsession;"
       };
       Object body = jsonEncode({
         'ctx': {'accountId': accountId},
@@ -56,9 +60,9 @@ class CartProvider {
       final response =
           await http.post(Uri.parse(apiUrl), headers: headers, body: body);
       var result = jsonDecode(response.body);
-      // if (!result['succeed']) {
-      //   throw Exception('Update video cart failed');
-      // }
+      if (!result['succeed']) {
+        throw Exception('Update video cart failed');
+      }
       return result;
     } catch (e) {
       throw Exception(e);

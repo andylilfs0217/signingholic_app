@@ -195,12 +195,12 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                   state.videoItems[i].id, state.videoItems[i].imagePaths?[0]),
               isVideo: true,
               onDelete: () {
+                context
+                    .read<CartBloc>()
+                    .add(UpdateVideoCartEvent(videoCartModel: videoCart!));
                 setState(() {
                   videoCart!.items!.removeAt(i);
                   videoCartItems.removeAt(i);
-                  context
-                      .read<CartBloc>()
-                      .add(UpdateVideoCartEvent(videoCartModel: videoCart!));
                 });
               },
             ));
@@ -222,7 +222,18 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
   Widget _buildVideoCartEmpty() {
     return Center(
-      child: Text('Your shopping cart is empty. Go shopping!'),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Your shopping cart is empty. Go shopping!'),
+          TextButton.icon(
+              onPressed: () {
+                AppNavigator.goTo(context, AppRoute.HOME);
+              },
+              icon: Icon(Icons.shopping_basket),
+              label: Text('Go to home page'))
+        ],
+      ),
     );
   }
 }

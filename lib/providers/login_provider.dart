@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:singingholic_app/global/variables.dart';
 
@@ -20,6 +22,15 @@ class LoginProvider {
       });
       final response =
           await http.post(Uri.parse(apiUrl), headers: headers, body: body);
+
+      // Store xsession in the cookies
+      final cookiesString = response.headers['set-cookie'];
+      if (cookiesString == null) throw Exception('No token available');
+      final cookies = Cookie.fromSetCookieValue(cookiesString);
+      final xsession = cookies.value;
+      var storage = FlutterSecureStorage();
+      await storage.write(key: 'xsession', value: xsession);
+
       var result = jsonDecode(response.body);
       return result;
     } catch (e) {
