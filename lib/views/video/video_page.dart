@@ -2,8 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
+import 'package:singingholic_app/data/bloc/cart/cart_bloc.dart';
+import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
+import 'package:singingholic_app/data/models/video/video_cart.dart';
+import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
@@ -216,21 +220,68 @@ class _VideoPageState extends State<VideoPage> {
   }
 
   Widget _buildButtonBar({VideoModel? videoModel}) {
-    return Column(
-      children: [
-        Divider(),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-              onPressed: () {
-                // TODO: Add video to cart
-                print('Add to cart');
-              },
-              icon: Icon(Icons.shopping_cart),
-              label: Text('Add to cart')),
-        ),
-        SizedBox(height: 10),
-      ],
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        // Check if the current video is added into the shopping cart
+        bool isAdded = false;
+        if (state is LoginSuccessState) {
+          var currVideoItems = state.memberModel.videoCart?.items ?? [];
+          var currVideoItemIds = currVideoItems.map((e) => e.video?.id);
+          var currVideoId = videoModel!.id;
+          isAdded = currVideoItemIds.contains(currVideoId);
+        }
+
+        return Column(
+          children: [
+            Divider(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                  onPressed: state is LoginSuccessState && !isAdded
+                      ? () {
+                          setState(() {
+                            // Put the current video into video cart
+                            var videoCart = state.memberModel.videoCart!;
+                            var id = videoCart.items?.length ?? 0;
+                            var qty = 1;
+                            var unit = videoModel?.price ?? 0;
+                            var unitDiscounted =
+                                unit - (videoModel?.discountPc ?? 0);
+                            var total = unitDiscounted * qty;
+                            var discount = unitDiscounted * qty;
+                            var videoCartItem = VideoCartItemModel(
+                                id: id,
+                                qty: qty,
+                                total: total,
+                                discount: discount,
+                                unit: unit,
+                                unitDiscounted: unitDiscounted,
+                                video: VideoModel(id: videoModel!.id));
+                            videoCart.items!.add(videoCartItem);
+                            // Update item total of video cart
+                            var videoCartJson = videoCart.toJson();
+                            videoCartJson['itemTotal'] += total;
+                            videoCart =
+                                new VideoCartModel.fromJson(videoCartJson);
+
+                            state.memberModel.videoCart = videoCart;
+
+                            context.read<CartBloc>().add(UpdateVideoCartEvent(
+                                videoCartModel: videoCart));
+                          });
+                        }
+                      : null,
+                  icon: Icon(Icons.shopping_cart),
+                  label: Text(!(state is LoginSuccessState)
+                      ? 'Please log in first'
+                      : isAdded
+                          ? 'Already in shopping cart'
+                          : 'Add to cart')),
+            ),
+            SizedBox(height: 10),
+          ],
+        );
+      },
     );
   }
 }

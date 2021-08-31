@@ -199,6 +199,10 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                     .read<CartBloc>()
                     .add(UpdateVideoCartEvent(videoCartModel: videoCart!));
                 setState(() {
+                  var itemTotal = (videoCart!.items![i].qty ?? 1) *
+                      videoCart!.items![i].unitDiscounted!;
+                  videoCart!.itemTotal = videoCart!.itemTotal! - itemTotal;
+
                   videoCart!.items!.removeAt(i);
                   videoCartItems.removeAt(i);
                 });

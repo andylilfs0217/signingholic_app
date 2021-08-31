@@ -2,10 +2,10 @@ import 'package:singingholic_app/data/models/product/product_cart_item.dart';
 import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 
 class VideoCartModel {
-  final List<VideoCartItemModel>? gifts;
-  final num? itemTotal;
-  final List<VideoCartItemModel>? items;
-  final num? usePoints;
+  List<VideoCartItemModel>? gifts;
+  num? itemTotal;
+  List<VideoCartItemModel>? items;
+  num? usePoints;
 
   VideoCartModel({
     this.itemTotal,
@@ -25,9 +25,9 @@ class VideoCartModel {
         this.usePoints = json['usePoints'];
 
   Map<String, dynamic> toJson() => {
-        'gift': this.gifts,
+        'gift': this.gifts?.map((e) => e.toJson()).toList(),
         'itemTotal': this.itemTotal,
-        'items': this.items,
+        'items': this.items?.map((e) => e.toJson()).toList(),
         'usePoints': this.usePoints,
       };
 }

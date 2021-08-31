@@ -56,8 +56,5 @@ final ThemeData appThemeData = ThemeData(
           borderRadius: BorderRadius.all(
               Radius.circular(AppThemeSize.cardBorderRadius)))),
   textTheme: TextTheme(),
-  elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
-              AppThemeColor.appSecondaryColor))),
+  // elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle()),
 );

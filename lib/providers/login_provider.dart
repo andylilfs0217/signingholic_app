@@ -37,4 +37,24 @@ class LoginProvider {
       throw Exception(e);
     }
   }
+
+  Future<dynamic> logout() async {
+    try {
+      var storage = FlutterSecureStorage();
+      var xsession = await storage.read(key: 'xsession');
+      String apiUrl = dotenv.get('THINKSHOPS_URL') + '/public/ec/member/logout';
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        "Cookie": "xsession=$xsession",
+      };
+      final response = await http.post(Uri.parse(apiUrl), headers: headers);
+
+      await storage.delete(key: 'xsession');
+
+      var result = jsonDecode(response.body);
+      return result;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

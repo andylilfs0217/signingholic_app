@@ -9,9 +9,9 @@ class VideoModel {
   final String? nameLang;
   final String? description;
   final String? descriptionLang;
-  final int? price;
-  final int? discount;
-  final int? discountPc;
+  final num? price;
+  final num? discount;
+  final num? discountPc;
   final String? youTubeId;
   final String? youTubePublishedAt;
   final List? tags;
@@ -21,8 +21,8 @@ class VideoModel {
   final String? updateTime;
   final List? categories;
 
-  VideoModel(
-    this.id,
+  VideoModel({
+    required this.id,
     this.free,
     this.status,
     this.name,
@@ -41,7 +41,7 @@ class VideoModel {
     this.featured,
     this.descriptionLang,
     this.categories,
-  );
+  });
 
   VideoModel.fromJson(Map<String, dynamic> json)
       : id = json['id'],

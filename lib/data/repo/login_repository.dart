@@ -16,4 +16,13 @@ class LoginRepository {
       throw Exception(e);
     }
   }
+
+  /// Logout member account
+  Future<dynamic> logout() async {
+    try {
+      await this.loginProvider.logout();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

@@ -37,8 +37,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
     // Logout event
     if (event is LogoutEvent) {
-      // TODO: implement logout api
       yield LoginInitialState();
+      try {
+        await loginRepository.logout();
+      } catch (e) {}
     }
   }
 }
