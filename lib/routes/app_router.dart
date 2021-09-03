@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:singingholic_app/data/models/video/video_item.dart';
 import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/views/checkout/checkout_page.dart';
 import 'package:singingholic_app/views/error/page_not_found_page.dart';
@@ -42,7 +43,12 @@ class AppRouteGenerator {
       case AppRoute.SHOPPING_CART:
         return MaterialPageRoute(builder: (_) => ShoppingCartPage());
       case AppRoute.CHECKOUT:
-        return MaterialPageRoute(builder: (_) => CheckoutPage());
+        final args = settings.arguments as CheckoutArguments;
+        return MaterialPageRoute(
+            builder: (_) => CheckoutPage(
+                  videoItems: args.videoItems,
+                  videoCart: args.videoCart,
+                ));
       default:
         return MaterialPageRoute(builder: (_) => PageNotFoundPage());
     }

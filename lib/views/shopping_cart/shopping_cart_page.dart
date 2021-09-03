@@ -8,6 +8,7 @@ import 'package:singingholic_app/data/models/product/product_cart_item.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
 import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 import 'package:singingholic_app/global/variables.dart';
+import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/routes/app_router.dart';
 import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
@@ -109,7 +110,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
   /// Show shopping cart summary
   Widget _buildSummary() {
-    return BlocBuilder<LoginBloc, LoginState>(
+    return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
         num subTotal =
             // (productCart?.itemTotal ?? 0) +  // Do not implement product yet
@@ -137,9 +138,14 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      AppNavigator.goTo(context, AppRoute.CHECKOUT);
-                    },
+                    onPressed: state is GetCartVideoSuccessState
+                        ? () {
+                            AppNavigator.goTo(context, AppRoute.CHECKOUT,
+                                args: CheckoutArguments(
+                                    videoItems: state.videoItems,
+                                    videoCart: videoCart!));
+                          }
+                        : null,
                     icon: Icon(Icons.shopping_basket),
                     label: Text('Checkout'),
                   ),
@@ -188,7 +194,8 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
               key: Key('video_$i'),
               qty: videoCart!.items![i].qty ?? 1,
               price: videoCart!.items![i].unit ?? 0,
-              discount: videoCart!.items![i].discount,
+              discount: (videoCart!.items![i].unit ?? 0) -
+                  (videoCart!.items![i].unitDiscounted ?? 0),
               discountedPrice: videoCart!.items![i].unitDiscounted,
               name: state.videoItems[i].name ?? '',
               imageUrl: PathUtils.getImagePathWithId(accountId, 'video',
@@ -213,10 +220,10 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
         return Column(
           children: [
-            Text(
-              'Videos',
-              style: Theme.of(context).textTheme.headline5,
-            ),
+            // Text(
+            //   'Videos',
+            //   style: Theme.of(context).textTheme.headline5,
+            // ),
             ...videoCartItems,
           ],
         );

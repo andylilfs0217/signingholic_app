@@ -60,6 +60,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
     if (event is UpdateVideoCartEvent) {
       try {
+        yield CartInitialState();
         await cartRepository.changeVideoCart(event.videoCartModel);
       } catch (e) {
         throw Exception(e);

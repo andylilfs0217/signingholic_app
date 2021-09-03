@@ -199,7 +199,7 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
                     style: Theme.of(context).textTheme.bodyText1),
             ]),
         overflow: TextOverflow.ellipsis,
-        maxLines: 1,
+        maxLines: 2,
       ),
     );
   }
