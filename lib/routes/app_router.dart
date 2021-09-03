@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:singingholic_app/data/models/video/video_item.dart';
 import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/views/checkout/checkout_page.dart';
+import 'package:singingholic_app/views/contact_us/contact_us_page.dart';
 import 'package:singingholic_app/views/error/page_not_found_page.dart';
 import 'package:singingholic_app/views/home/home_page.dart';
 import 'package:singingholic_app/views/login/login_page.dart';
+import 'package:singingholic_app/views/settings/settings_page.dart';
 import 'package:singingholic_app/views/shopping_cart/shopping_cart_page.dart';
 import 'package:singingholic_app/views/upload/upload_page.dart';
 import 'package:singingholic_app/views/video/video_list_page.dart';
@@ -20,6 +22,8 @@ class AppRoute {
   static const VIDEO_LIST = '/video-list';
   static const SHOPPING_CART = '/shopping_cart';
   static const CHECKOUT = '/checkout';
+  static const SETTINGS = '/settings';
+  static const CONTACT_US = '/contact-us';
 }
 
 class AppRouteGenerator {
@@ -49,6 +53,10 @@ class AppRouteGenerator {
                   videoItems: args.videoItems,
                   videoCart: args.videoCart,
                 ));
+      case AppRoute.SETTINGS:
+        return MaterialPageRoute(builder: (_) => SettingsPage());
+      case AppRoute.CONTACT_US:
+        return MaterialPageRoute(builder: (_) => ContactUsPage());
       default:
         return MaterialPageRoute(builder: (_) => PageNotFoundPage());
     }

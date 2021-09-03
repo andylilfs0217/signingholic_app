@@ -24,7 +24,7 @@ class _AppDrawerState extends State<AppDrawer> {
             padding: EdgeInsets.zero,
             children: [
               _buildDrawerHeader(),
-              _buildSearchBar(),
+              // _buildSearchBar(),
               _buildHomeTile(),
               _buildShopTile(),
               _buildOnlineClassTile(),
@@ -120,10 +120,8 @@ class _AppDrawerState extends State<AppDrawer> {
     return AppDrawerListTile(
       title: 'Contact Us',
       onTap: () {
-        // TODO: Implement navigation to Contact Us page
-        print('Go to Contact Us page');
+        AppNavigator.drawerGoTo(context, AppRoute.CONTACT_US);
       },
-      enabled: false, // TODO: Enable the listtile
     );
   }
 
@@ -132,10 +130,8 @@ class _AppDrawerState extends State<AppDrawer> {
     return AppDrawerListTile(
       title: 'Settings',
       onTap: () {
-        // TODO: Implement navigation to Settings page
-        print('Go to Settings page');
+        AppNavigator.drawerGoTo(context, AppRoute.SETTINGS);
       },
-      enabled: false, // TODO: Enable the listtile
     );
   }
 
