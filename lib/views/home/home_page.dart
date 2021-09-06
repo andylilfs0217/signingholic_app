@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/video_list/video_list_bloc.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/routes/app_arguments.dart';
@@ -10,6 +11,7 @@ import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
 import 'package:singingholic_app/widgets/app_footer.dart';
 import 'package:singingholic_app/widgets/app_scaffold.dart';
+import 'package:singingholic_app/widgets/app_video_search_bar.dart';
 import 'package:singingholic_app/widgets/item_card.dart';
 
 /// Home page
@@ -46,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     return ListView(
       padding: EdgeInsets.zero,
       children: [
+        _buildSearchBar(),
         _buildLogo(),
         _buildHorizontalList(
             title: title,
@@ -57,6 +60,15 @@ class _HomePageState extends State<HomePage> {
         _buildGridView(title: 'About Us', imageRatio: 1 / 1),
         AppFooter(),
       ],
+    );
+  }
+
+  /// Create Search bar
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: AppThemeSize.defaultItemVerticalPaddingSize),
+      child: AppVideoSearchBar(),
     );
   }
 
@@ -165,18 +177,21 @@ class _HomePageState extends State<HomePage> {
   Widget _buildItemCard({
     double imageRatio = 16 / 9,
     String? imageUrl,
+    String? assetImagePath,
     List? categories,
     required String title,
     String? subtitle,
     List? tags,
+    BoxFit fit = BoxFit.cover,
     int categoryMaxLine = 1,
     int titleMaxLine = 1,
     Function()? onTap,
   }) {
     return ItemCard(
       imageRatio: imageRatio,
-      fit: BoxFit.cover,
+      fit: fit,
       imageUrl: imageUrl,
+      assetImagePath: assetImagePath,
       categories: categories,
       title: title,
       subtitle: subtitle,
@@ -209,13 +224,13 @@ class _HomePageState extends State<HomePage> {
         _buildItemCard(
           title: 'Kan Lam',
           imageRatio: imageRatio,
-          imageUrl: 'https://picsum.photos/id/237/200/200',
+          assetImagePath: 'assets/images/Tutor_Kan.jpeg',
           subtitle: 'Singing Tutor',
         ),
         _buildItemCard(
           title: 'Joyce Lee',
           imageRatio: imageRatio,
-          imageUrl: 'https://picsum.photos/id/238/200/200',
+          assetImagePath: 'assets/images/Tutor_Jacq.jpeg',
           subtitle: 'Singing Tutor',
         ),
       ],

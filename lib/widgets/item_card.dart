@@ -13,8 +13,11 @@ class ItemCard extends StatefulWidget {
   /// How the image fits with the size
   final BoxFit? fit;
 
-  /// URL of the required image
+  /// URL of the required image (If [assetImagePath] is not null, [imageUrl] will be ignored.)
   final String? imageUrl;
+
+  /// Path of the asset image
+  final String? assetImagePath;
 
   /// Category of the item
   final List? categories;
@@ -46,6 +49,7 @@ class ItemCard extends StatefulWidget {
       this.imageRatio = 16 / 9,
       this.fit = BoxFit.cover,
       this.imageUrl,
+      this.assetImagePath,
       this.categories,
       required this.title,
       this.tags,
@@ -65,17 +69,15 @@ class _ItemCardState extends State<ItemCard> {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: widget.onTap ??
-            () {
-              print(widget.title);
-            },
+        onTap: widget.onTap,
         child: Container(
           width: widget.width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (widget.imageUrl != null) _buildImage(),
+              if (widget.imageUrl != null || widget.assetImagePath != null)
+                _buildImage(),
               if (widget.categories != null) _buildCategory(),
               _buildTitle(),
               if (widget.subtitle != null) _buildSubtitle(),
@@ -94,13 +96,19 @@ class _ItemCardState extends State<ItemCard> {
           top: Radius.circular(AppThemeSize.cardBorderRadius)),
       child: AspectRatio(
         aspectRatio: widget.imageRatio,
-        child: CachedNetworkImage(
-          imageUrl: widget.imageUrl!,
-          placeholder: (context, url) => AppCircularLoading(),
-          errorWidget: (context, url, error) => ImageNotFound(),
-          fit: widget.fit,
-          width: widget.width,
-        ),
+        child: widget.assetImagePath != null
+            ? Image(
+                image: AssetImage(widget.assetImagePath!),
+                fit: widget.fit,
+                width: widget.width,
+              )
+            : CachedNetworkImage(
+                imageUrl: widget.imageUrl!,
+                placeholder: (context, url) => AppCircularLoading(),
+                errorWidget: (context, url, error) => ImageNotFound(),
+                fit: widget.fit,
+                width: widget.width,
+              ),
       ),
     );
   }

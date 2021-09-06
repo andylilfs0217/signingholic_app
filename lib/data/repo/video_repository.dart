@@ -9,10 +9,23 @@ class VideoRepository {
   VideoRepository({required this.videoProvider});
 
   /// Fetch list of videos
-  Future<VideoListModel> fetchVideoList() async {
+  Future<VideoListModel> fetchVideoList(
+      {String? search,
+      int? limit,
+      int? offset,
+      String? sort,
+      String? dir,
+      int? category}) async {
     try {
-      final VideoListModel videoListModel =
-          await this.videoProvider.fetchVideoList();
+      final VideoListModel videoListModel = await this
+          .videoProvider
+          .fetchVideoList(
+              search: search,
+              limit: limit,
+              offset: offset,
+              sort: sort,
+              dir: dir,
+              category: category);
       return videoListModel;
     } catch (e) {
       throw Exception(e);

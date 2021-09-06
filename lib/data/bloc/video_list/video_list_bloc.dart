@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +22,13 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
       try {
         yield VideoListInitialState();
         // Fetch Video list
-        VideoListModel videoList = await videoRepository.fetchVideoList();
+        VideoListModel videoList = await videoRepository.fetchVideoList(
+            search: event.search,
+            limit: event.limit,
+            offset: event.offset,
+            sort: event.sort,
+            dir: event.dir,
+            category: event.category);
         if (videoList.count != 0 && videoList.results.length != 0) {
           // If video list is not empty
           yield VideoListFetchSuccessState(videoList);

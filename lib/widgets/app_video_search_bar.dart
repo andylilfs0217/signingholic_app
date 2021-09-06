@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+import 'package:singingholic_app/assets/app_theme.dart';
+import 'package:singingholic_app/data/bloc/video_list/video_list_bloc.dart';
+import 'package:provider/provider.dart';
+
+class AppVideoSearchBar extends StatefulWidget {
+  const AppVideoSearchBar({Key? key}) : super(key: key);
+
+  @override
+  _AppVideoSearchBarState createState() => _AppVideoSearchBarState();
+}
+
+class _AppVideoSearchBarState extends State<AppVideoSearchBar> {
+  TextEditingController _searchController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: _searchController,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: AppThemeColor.searchBarColor,
+        border: OutlineInputBorder(borderSide: BorderSide.none),
+        hintText: 'Search',
+        prefixIcon: Icon(Icons.search),
+        contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+        suffixIcon: IconButton(
+          onPressed: () {
+            _searchController.clear();
+          },
+          icon: Icon(Icons.clear),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+      ),
+      // onChanged: (val) {
+      //   if (val.length > 2) {
+      //     print('changed: $val');
+      //   }
+      // },
+      onSubmitted: (val) {
+        context.read<VideoListBloc>().add(VideoListFetchEvent(search: val));
+      },
+    );
+  }
+}
