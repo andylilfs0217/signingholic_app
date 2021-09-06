@@ -2,9 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:singingholic_app/data/models/product/product_cart.dart';
-import 'package:singingholic_app/data/models/product/product_item.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
 import 'package:singingholic_app/data/models/video/video_item.dart';
 import 'package:singingholic_app/data/repo/cart_repository.dart';

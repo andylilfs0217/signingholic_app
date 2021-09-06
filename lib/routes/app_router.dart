@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:singingholic_app/data/models/video/video_item.dart';
 import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/views/checkout/checkout_page.dart';
 import 'package:singingholic_app/views/contact_us/contact_us_page.dart';

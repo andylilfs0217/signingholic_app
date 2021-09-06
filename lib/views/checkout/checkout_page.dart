@@ -8,7 +8,6 @@ import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
-import 'package:singingholic_app/widgets/app_scaffold.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<VideoItemModel> videoItems;

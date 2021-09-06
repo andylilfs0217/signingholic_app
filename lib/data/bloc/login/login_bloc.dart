@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:singingholic_app/data/bloc/cart/cart_bloc.dart';
 import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/repo/login_repository.dart';
 

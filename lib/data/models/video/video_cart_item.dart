@@ -1,5 +1,3 @@
-import 'package:singingholic_app/data/models/product/product_item.dart';
-import 'package:singingholic_app/data/models/product/product_cart_item_option.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 
 class VideoCartItemModel {
