@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/data/models/video/video_list.dart';
@@ -13,11 +12,11 @@ class VideoProvider {
 
   Future<VideoListModel> fetchVideoList(
       {String? search = '',
-      int? limit = 30,
-      int? offset = 0,
+      int? limit,
+      int? offset,
       String? sort,
-      String? dir = 'asc',
-      int? category = 0}) async {
+      String? dir,
+      int? category}) async {
     try {
       Map<String, String> headers = {
         "Content-Type": "application/json",

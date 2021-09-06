@@ -7,12 +7,12 @@ abstract class VideoListEvent extends Equatable {
 }
 
 class VideoListFetchEvent extends VideoListEvent {
-  String? search;
-  int? limit;
-  int? offset;
-  String? sort;
-  String? dir;
-  int? category;
+  final String? search;
+  final int? limit;
+  final int? offset;
+  final String? sort;
+  final String? dir;
+  final int? category;
 
   VideoListFetchEvent(
       {this.search,

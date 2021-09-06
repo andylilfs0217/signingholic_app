@@ -32,11 +32,6 @@ class _AppVideoSearchBarState extends State<AppVideoSearchBar> {
           highlightColor: Colors.transparent,
         ),
       ),
-      // onChanged: (val) {
-      //   if (val.length > 2) {
-      //     print('changed: $val');
-      //   }
-      // },
       onSubmitted: (val) {
         context.read<VideoListBloc>().add(VideoListFetchEvent(search: val));
       },

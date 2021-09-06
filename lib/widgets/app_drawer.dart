@@ -56,7 +56,7 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 
-  /// Craete Login button in the drawer header
+  /// Create Login button in the drawer header
   Widget _buildLoginButton() {
     return Center(
       child: AppLoginButton(),
@@ -64,22 +64,23 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   /// Create Search bar
-  Widget _buildSearchBar() {
-    return Padding(
-      padding: AppThemeSize.appDrawerListTilePadding,
-      child: TextField(
-        obscureText: true,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: AppThemeColor.searchBarColor,
-          border: OutlineInputBorder(borderSide: BorderSide.none),
-          labelText: 'Search',
-          prefixIcon: Icon(Icons.search),
-          contentPadding: EdgeInsets.symmetric(vertical: 10.0),
-        ),
-      ),
-    );
-  }
+  // TODO: Remove this old code
+  // Widget _buildSearchBar() {
+  //   return Padding(
+  //     padding: AppThemeSize.appDrawerListTilePadding,
+  //     child: TextField(
+  //       obscureText: true,
+  //       decoration: InputDecoration(
+  //         filled: true,
+  //         fillColor: AppThemeColor.searchBarColor,
+  //         border: OutlineInputBorder(borderSide: BorderSide.none),
+  //         labelText: 'Search',
+  //         prefixIcon: Icon(Icons.search),
+  //         contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// Create Home Tile
   Widget _buildHomeTile() {
@@ -99,7 +100,7 @@ class _AppDrawerState extends State<AppDrawer> {
         // TODO: Implement navigation to Shop page
         print('Go to Shop page');
       },
-      enabled: false, // TODO: Enable the listtile
+      enabled: false, // TODO: Enable the listTile
     );
   }
 
@@ -111,7 +112,7 @@ class _AppDrawerState extends State<AppDrawer> {
         // TODO: Implement navigation to Online Class page
         print('Go to Online Class page');
       },
-      enabled: false, // TODO: Enable the listtile
+      enabled: false, // TODO: Enable the listTile
     );
   }
 
@@ -190,7 +191,7 @@ class _AppDrawerState extends State<AppDrawer> {
         // TODO: Implement navigation to My order page
         print('Go to my order page');
       },
-      enabled: false, // TODO: Enable the listtile
+      enabled: false, // TODO: Enable the listTile
     );
   }
 
