@@ -225,10 +225,10 @@ class _VideoPageState extends State<VideoPage> {
         // Check if the current video is added into the shopping cart
         bool isAdded = false;
         if (state is LoginSuccessState) {
-          var currVideoItems = state.memberModel.videoCart?.items ?? [];
-          var currVideoItemIds = currVideoItems.map((e) => e.video?.id);
-          var currVideoId = videoModel!.id;
-          isAdded = currVideoItemIds.contains(currVideoId);
+          var currentVideoItems = state.memberModel.videoCart?.items ?? [];
+          var currentVideoItemIds = currentVideoItems.map((e) => e.video?.id);
+          var currentVideoId = videoModel!.id;
+          isAdded = currentVideoItemIds.contains(currentVideoId);
         }
 
         return Column(
