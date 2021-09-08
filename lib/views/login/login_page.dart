@@ -100,7 +100,6 @@ class _LoginPageState extends State<LoginPage> {
         }
         return TextButton.icon(
           onPressed: () {
-            // TODO: Implement sign up button
             if (_formKey.currentState!.validate()) {
               context.read<LoginBloc>().add(LoginSubmittedEvent(
                   email: _usernameController.text,

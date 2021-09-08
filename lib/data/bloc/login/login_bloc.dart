@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:singingholic_app/data/bloc/cart/cart_bloc.dart';
 import 'package:singingholic_app/data/models/member/member.dart';
+import 'package:singingholic_app/data/models/video/video_cart.dart';
 import 'package:singingholic_app/data/repo/login_repository.dart';
 
 part 'login_event.dart';
@@ -41,6 +41,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       try {
         await loginRepository.logout();
       } catch (e) {}
+    }
+    // Update video cart
+    if (event is LoginUpdateVideoCartEvent && state is LoginSuccessState) {
+      state.memberModel!.videoCart = event.videoCartModel;
     }
   }
 }

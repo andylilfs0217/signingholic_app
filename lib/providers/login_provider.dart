@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:singingholic_app/global/variables.dart';
+import 'package:singingholic_app/utils/path_utils.dart';
 
 class LoginProvider {
   LoginProvider();
@@ -12,7 +12,7 @@ class LoginProvider {
   Future<dynamic> login(
       {required String email, required String password}) async {
     try {
-      String apiUrl = dotenv.get('THINKSHOPS_URL') + '/public/ec/member/logon';
+      Uri apiUri = PathUtils.getApiUri('/public/ec/member/logon');
       Map<String, String> headers = {
         "Content-Type": "application/json",
       };
@@ -20,8 +20,7 @@ class LoginProvider {
         "ctx": {'accountId': accountId},
         'body': {'email': email, 'password': password, 'type': 'email'}
       });
-      final response =
-          await http.post(Uri.parse(apiUrl), headers: headers, body: body);
+      final response = await http.post(apiUri, headers: headers, body: body);
 
       // Store xsession in the cookies
       final cookiesString = response.headers['set-cookie'];
@@ -42,12 +41,12 @@ class LoginProvider {
     try {
       var storage = FlutterSecureStorage();
       var xsession = await storage.read(key: 'xsession');
-      String apiUrl = dotenv.get('THINKSHOPS_URL') + '/public/ec/member/logout';
+      Uri apiUri = PathUtils.getApiUri('/public/ec/member/logout');
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Cookie": "xsession=$xsession",
       };
-      final response = await http.post(Uri.parse(apiUrl), headers: headers);
+      final response = await http.post(apiUri, headers: headers);
 
       await storage.delete(key: 'xsession');
 

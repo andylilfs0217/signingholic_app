@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
 class AppNavigator {
-  static goTo(BuildContext context, String name, {Object? args}) {
-    Navigator.pushNamed(context, name, arguments: args);
+  static goTo(BuildContext context, String name,
+      {Object? args, Function()? then}) {
+    Navigator.pushNamed(context, name, arguments: args).then((value) {
+      then;
+    });
   }
 
   static drawerGoTo(BuildContext context, String name, {Object? args}) {
