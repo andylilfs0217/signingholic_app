@@ -18,3 +18,10 @@ class LoginSubmittedEvent extends LoginEvent {
 }
 
 class LogoutEvent extends LoginEvent {}
+
+class LoginUpdateVideoCartEvent extends LoginEvent {
+  /// Video cart
+  final VideoCartModel videoCartModel;
+
+  const LoginUpdateVideoCartEvent({required this.videoCartModel}) : super();
+}

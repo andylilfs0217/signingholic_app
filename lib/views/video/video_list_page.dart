@@ -104,7 +104,9 @@ class _VideoListPageState extends State<VideoListPage> {
               imageRatio: 1 / 1,
               onTap: () {
                 AppNavigator.goTo(context, AppRoute.VIDEO,
-                    args: VideoArguments(id: e.id));
+                    args: VideoArguments(id: e.id), then: () {
+                  setState(() {});
+                });
               });
         }).toList(),
       ),

@@ -12,6 +12,7 @@ class AppVideoSearchBar extends StatefulWidget {
 
 class _AppVideoSearchBarState extends State<AppVideoSearchBar> {
   TextEditingController _searchController = TextEditingController();
+  String originalInput = '';
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -26,6 +27,12 @@ class _AppVideoSearchBarState extends State<AppVideoSearchBar> {
         suffixIcon: IconButton(
           onPressed: () {
             _searchController.clear();
+            if ('' != originalInput) {
+              context
+                  .read<VideoListBloc>()
+                  .add(VideoListFetchEvent(search: ''));
+              originalInput = '';
+            }
           },
           icon: Icon(Icons.clear),
           splashColor: Colors.transparent,
@@ -33,7 +40,9 @@ class _AppVideoSearchBarState extends State<AppVideoSearchBar> {
         ),
       ),
       onSubmitted: (val) {
-        context.read<VideoListBloc>().add(VideoListFetchEvent(search: val));
+        if (val != originalInput)
+          context.read<VideoListBloc>().add(VideoListFetchEvent(search: val));
+        originalInput = val;
       },
     );
   }

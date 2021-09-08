@@ -158,7 +158,9 @@ class _HomePageState extends State<HomePage> {
                     imageRatio: imageRatio,
                     onTap: () {
                       AppNavigator.goTo(context, AppRoute.VIDEO,
-                          args: VideoArguments(id: e.id));
+                          args: VideoArguments(id: e.id), then: () {
+                        setState(() {});
+                      });
                     });
               }).toList(),
             ),

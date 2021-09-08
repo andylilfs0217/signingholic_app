@@ -7,7 +7,7 @@ import 'package:singingholic_app/routes/app_router.dart';
 import 'package:singingholic_app/utils/app_navigator.dart';
 
 /// Base AppBar of the App
-class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AppAppBar extends StatefulWidget implements PreferredSizeWidget {
   final AppBar appBar;
   final String title;
   final bool hasCart;
@@ -17,14 +17,18 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
       : super(key: key);
 
   @override
+  _AppAppBarState createState() => _AppAppBarState();
+  @override
   Size get preferredSize => appBar.preferredSize;
+}
 
+class _AppAppBarState extends State<AppAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      title: Text(title),
-      actions: [if (hasCart) _buildShoppingCartIcon()],
+      title: Text(widget.title),
+      actions: [if (widget.hasCart) _buildShoppingCartIcon()],
     );
   }
 
@@ -51,7 +55,9 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
               showBadge: state is LoginSuccessState,
             ),
             onPressed: () {
-              AppNavigator.goTo(context, AppRoute.SHOPPING_CART);
+              AppNavigator.goTo(context, AppRoute.SHOPPING_CART, then: () {
+                setState(() {});
+              });
             });
       },
     );

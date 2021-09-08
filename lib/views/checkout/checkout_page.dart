@@ -220,6 +220,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
           context
               .read<CartBloc>()
               .add(UpdateVideoCartEvent(videoCartModel: emptyVideoCart));
+          context
+              .read<LoginBloc>()
+              .add(LoginUpdateVideoCartEvent(videoCartModel: emptyVideoCart));
           // Pop up payment success message
           showDialog(
               context: context,

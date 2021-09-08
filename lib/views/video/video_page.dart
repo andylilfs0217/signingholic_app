@@ -264,7 +264,10 @@ class _VideoPageState extends State<VideoPage> {
                             videoCart =
                                 new VideoCartModel.fromJson(videoCartJson);
 
-                            state.memberModel.videoCart = videoCart;
+                            // state.memberModel.videoCart = videoCart;
+                            context.read<LoginBloc>().add(
+                                LoginUpdateVideoCartEvent(
+                                    videoCartModel: videoCart));
 
                             context.read<CartBloc>().add(UpdateVideoCartEvent(
                                 videoCartModel: videoCart));
