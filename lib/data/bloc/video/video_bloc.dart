@@ -23,8 +23,8 @@ class VideoBloc extends Bloc<VideoEvent, VideoState> {
       try {
         yield VideoInitialState();
         VideoModel videoModel = await videoRepository.fetchVideo(id: event.id);
-        List<VideoFormatModel>? videoFormats =
-            await videoRepository.fetchVideoFormats(id: event.id);
+        List<VideoFormatModel>? videoFormats = await videoRepository
+            .fetchVideoFormats(id: event.id, memberId: event.memberId);
         // Obtain the correct url
         // String url = videoFormats
         yield VideoFetchSuccessState(videoModel, videoFormats);
