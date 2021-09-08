@@ -65,7 +65,8 @@ class VideoProvider {
     }
   }
 
-  Future<List<VideoFormatModel>?> fetchVideoFormats({required int id}) async {
+  Future<List<VideoFormatModel>?> fetchVideoFormats(
+      {required int id, int? memberId}) async {
     try {
       Uri apiUri = PathUtils.getApiUri('/public/ec/video/get/$id/formats');
       Map<String, String> headers = {
@@ -73,7 +74,7 @@ class VideoProvider {
       };
       Object body = jsonEncode({
         "ctx": {"accountId": accountId},
-        'member': null,
+        'member': {'id': memberId},
       });
       final response = await http.post(apiUri, headers: headers, body: body);
       final responseBody = jsonDecode(response.body)['payload'];

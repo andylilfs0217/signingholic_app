@@ -43,10 +43,12 @@ class VideoRepository {
   }
 
   /// Fetch formats of a specific video
-  Future<List<VideoFormatModel>?> fetchVideoFormats({required int id}) async {
+  Future<List<VideoFormatModel>?> fetchVideoFormats(
+      {required int id, int? memberId}) async {
     try {
-      final List<VideoFormatModel>? videoFormat =
-          await this.videoProvider.fetchVideoFormats(id: id);
+      final List<VideoFormatModel>? videoFormat = await this
+          .videoProvider
+          .fetchVideoFormats(id: id, memberId: memberId);
       return videoFormat;
     } catch (e) {
       throw Exception(e);

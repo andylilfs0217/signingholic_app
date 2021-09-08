@@ -34,16 +34,26 @@ class _VideoPageState extends State<VideoPage> {
   @override
   void initState() {
     super.initState();
-    // Create video list fetch event
-    context.read<VideoBloc>().add(FetchVideoEvent(id: widget.id));
   }
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      appBar: AppAppBar(appBar: AppBar()),
-      body: _buildBody(),
-      hasDrawer: false,
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        int? memberId;
+        if (state is LoginSuccessState) {
+          memberId = state.memberModel.id;
+        }
+        // Create video list fetch event
+        context
+            .read<VideoBloc>()
+            .add(FetchVideoEvent(id: widget.id, memberId: memberId));
+        return AppScaffold(
+          appBar: AppAppBar(appBar: AppBar()),
+          body: _buildBody(),
+          hasDrawer: false,
+        );
+      },
     );
   }
 
