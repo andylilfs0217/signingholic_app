@@ -28,7 +28,6 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
       widget.videoUrl,
     );
     initializeVideoPlayerFuture = videoController.initialize();
-    // videoController.setLooping(false);
     chewieController = ChewieController(
         videoPlayerController: videoController,
         autoPlay: false,
