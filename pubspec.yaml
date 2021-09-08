@@ -33,8 +33,8 @@ dependencies:
   flutter_launcher_icons: ^0.9.1
   flutter_secure_storage: ^4.2.1
   flutter_slidable: ^0.6.0
-  http: ^0.13.3
   flutter_stripe: ^1.3.0
+  http: ^0.13.3
   validators: ^3.0.0
   video_player: ^2.1.12
 

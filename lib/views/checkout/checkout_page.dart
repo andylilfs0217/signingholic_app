@@ -1,6 +1,14 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
+import 'package:singingholic_app/data/bloc/cart/cart_bloc.dart';
+import 'package:singingholic_app/data/bloc/checkout/checkout_bloc.dart';
+import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
+import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
 import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 import 'package:singingholic_app/data/models/video/video_item.dart';
@@ -10,6 +18,8 @@ import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
+import 'package:http/http.dart' as http;
+import 'package:singingholic_app/widgets/app_dialog.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<VideoItemModel> videoItems;
@@ -24,15 +34,24 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
+  late MemberModel memberModel;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppAppBar(
-        appBar: AppBar(),
-        title: 'Checkout',
-        hasCart: false,
-      ),
-      body: _buildBody(),
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        if (state is LoginSuccessState) {
+          memberModel = state.memberModel;
+        }
+        return Scaffold(
+          appBar: AppAppBar(
+            appBar: AppBar(),
+            title: 'Checkout',
+            hasCart: false,
+          ),
+          body: _buildBody(),
+        );
+      },
     );
   }
 
@@ -186,17 +205,103 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ],
             ),
             SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  AppNavigator.goTo(context, AppRoute.PAYMENT);
-                }, // TODO: implement payment
-                icon: Icon(Icons.payment),
-                label: Text('Pay'),
-              ),
-            ),
+            _buildPayButton(),
           ],
         ));
+  }
+
+  Widget _buildPayButton() {
+    return BlocConsumer<CheckoutBloc, CheckoutState>(
+      listener: (context, state) {
+        if (state is FinishPaymentState) {
+          // Clear shopping cart
+          final emptyVideoCart =
+              VideoCartModel(items: [], gifts: [], itemTotal: 0, usePoints: 0);
+          context
+              .read<CartBloc>()
+              .add(UpdateVideoCartEvent(videoCartModel: emptyVideoCart));
+          // Pop up payment success message
+          showDialog(
+              context: context,
+              builder: (BuildContext dialogContext) {
+                return AppDialog(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_circle_outline),
+                      Text('Payment confirm')
+                    ],
+                  ),
+                );
+              });
+          // Go back to Home page after 1 second
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.of(context).pop();
+            AppNavigator.goTo(context, AppRoute.HOME);
+          });
+        } else if (state is PaymentErrorState) {
+          // Tell users that the payment is failed
+          final snackBar = SnackBar(
+            content: Text(state.errorMessage),
+            action: SnackBarAction(
+              label: 'Dismiss',
+              onPressed: () {},
+              textColor: AppThemeColor.appPrimaryColor,
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      },
+      builder: (context, state) {
+        if (state is CheckoutInitialState ||
+            state is FinishPaymentState ||
+            state is GetStripePaymentFailState ||
+            state is PaymentFailState) {
+          return SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                _initStripe();
+              },
+              icon: Icon(Icons.payment),
+              label: Text('Pay'),
+            ),
+          );
+        } else {
+          return AppCircularLoading();
+        }
+      },
+    );
+  }
+
+  void _initStripe() {
+    // Call Stripe payment
+    Map<String, dynamic> body = {
+      'ctx': {'accountId': accountId},
+      'member': memberModel.toJson(),
+      'body': {
+        'cart': widget.videoCart.toJson(),
+        'details': {
+          'method': 'stripe',
+          'mode': 'full',
+          'logisticsLocation': null,
+          'logisticsMethod': null,
+          'form': memberModel.toJson()
+        },
+        'miniSite': null,
+      }
+    };
+    body['body']['details']['form']['_data'] = {
+      'name': memberModel.name,
+      'email': memberModel.email,
+      'mobile': memberModel.mobile,
+      'address': memberModel.address,
+      'birthday': memberModel.birthday
+    };
+    body['body']['cart'] = {
+      ...body['body']['cart'] as Map<String, dynamic>,
+      ...{'shippingTotal': 0, 'shippingDiscounted': 0, 'type': 'video'}
+    };
+    context.read<CheckoutBloc>().add(GetStripeBodyEvent(body: body));
   }
 }
