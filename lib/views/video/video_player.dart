@@ -1,3 +1,4 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
 import 'package:video_player/video_player.dart';
@@ -17,6 +18,7 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
   // Variables
   late VideoPlayerController videoController;
   late Future<void> initializeVideoPlayerFuture;
+  late ChewieController chewieController;
 
   @override
   void initState() {
@@ -26,7 +28,18 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
       widget.videoUrl,
     );
     initializeVideoPlayerFuture = videoController.initialize();
-    videoController.setLooping(false);
+    // videoController.setLooping(false);
+    chewieController = ChewieController(
+        videoPlayerController: videoController,
+        autoPlay: false,
+        looping: false);
+  }
+
+  @override
+  void dispose() {
+    videoController.dispose();
+    chewieController.dispose();
+    super.dispose();
   }
 
   @override
@@ -35,26 +48,8 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
       future: initializeVideoPlayerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          // If the VideoPlayerController has finished initialization, use
-          // the data it provides to limit the aspect ratio of the video.
-          return Column(
-            children: [
-              AspectRatio(
-                aspectRatio: videoController.value.aspectRatio,
-                // aspectRatio: 16 / 9,
-                child: Stack(children: [
-                  VideoPlayer(videoController),
-                  // ClosedCaption(text: videoController.value.caption.text),
-                  ControlsOverlay(controller: videoController),
-                ]),
-              ),
-              VideoProgressIndicator(
-                videoController,
-                allowScrubbing: true,
-                padding: EdgeInsets.all(0),
-              ),
-            ],
-          );
+          return AspectRatio(
+              aspectRatio: 16 / 9, child: Chewie(controller: chewieController));
         } else {
           // If the VideoPlayerController is still initializing, show a
           // loading spinner.
