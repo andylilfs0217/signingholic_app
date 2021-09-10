@@ -11,6 +11,7 @@ import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
+import 'package:singingholic_app/views/video/video_discussion.dart';
 import 'package:singingholic_app/views/video/video_player.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
@@ -190,15 +191,12 @@ class _VideoPageState extends State<VideoPage> {
     );
   }
 
-  /// TODO: Create tab view of discussion
+  /// Create tab view of discussion
   Widget _buildDiscussion() {
     return Padding(
       padding: const EdgeInsets.symmetric(
           vertical: AppThemeSize.defaultItemVerticalPaddingSize),
-      child: Text(
-        'To be implemented',
-        style: TextStyle(color: Colors.red),
-      ),
+      child: VideoDiscussion(videoId: widget.id),
     );
   }
 
