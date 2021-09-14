@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/cart/cart_bloc.dart';
+import 'package:singingholic_app/data/bloc/comment/comment_bloc.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
@@ -11,6 +12,7 @@ import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
+import 'package:singingholic_app/views/error/oops_widget.dart';
 import 'package:singingholic_app/views/video/video_discussion.dart';
 import 'package:singingholic_app/views/video/video_player.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
@@ -91,10 +93,8 @@ class _VideoPageState extends State<VideoPage> {
           );
         } else {
           // If there is an error when getting the video
-          return Container(
-            height: 100,
-            color: Colors.red,
-          );
+          return OopsWidget(
+              message: 'Seems like the video is playing hide and seek.');
         }
       },
     );
