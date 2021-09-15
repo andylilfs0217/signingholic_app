@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/data/models/comment/video_comment_model.dart';
 import 'package:singingholic_app/views/video/video_comment_dialog.dart';
+import 'package:singingholic_app/views/video/video_comment_replies.dart';
 
 /// The like and dislike status of the user
 enum LikeStatus { LIKE, DISLIKE, NONE }
@@ -13,8 +15,13 @@ class VideoComment extends StatefulWidget {
   /// Details of the comment
   final VideoCommentModel videoComment;
 
+  /// If true, replies to the comment is allowed and reply button will be shown
+  final bool allowReply;
+
   /// Create a single comment widget
-  const VideoComment({Key? key, required this.videoComment}) : super(key: key);
+  const VideoComment(
+      {Key? key, required this.videoComment, this.allowReply = true})
+      : super(key: key);
 
   @override
   _VideoCommentState createState() => _VideoCommentState();
@@ -46,7 +53,7 @@ class _VideoCommentState extends State<VideoComment> {
               widget.videoComment.comment!.isNotEmpty)
             _buildCommentText(),
           _buildCommentLikes(),
-          if (_numOfReplies > 0) _buildCommentReplies(),
+          if (_numOfReplies > 0 && widget.allowReply) _buildCommentReplies(),
         ],
       ),
     );
@@ -115,24 +122,26 @@ class _VideoCommentState extends State<VideoComment> {
                     : Icons.thumb_down_alt_outlined),
                 label: Text('0')),
             // Reply button
-            TextButton.icon(
-                onPressed: state is LoginSuccessState
-                    ? () {
-                        showDialog(
-                            context: context,
-                            builder: (_) => VideoCommentDialog(
-                                  video: widget.videoComment.video!,
-                                  member: widget.videoComment.member!,
-                                  parentComment: widget.videoComment,
-                                )).then((value) {
-                          setState(() {
-                            if (value != null) _numOfReplies += value as int;
+            if (widget.allowReply)
+              TextButton.icon(
+                  onPressed: state is LoginSuccessState
+                      ? () {
+                          showDialog(
+                              context: context,
+                              builder: (_) => VideoCommentDialog(
+                                    video: widget.videoComment.video!,
+                                    member: widget.videoComment.member!,
+                                    parentComment: widget.videoComment,
+                                  )).then((value) {
+                            setState(() {
+                              if (value != null) _numOfReplies += value as int;
+                            });
                           });
-                        });
-                      }
-                    : null,
-                icon: Icon(Icons.reply),
-                label: Text(_numOfReplies > 0 ? _numOfReplies.toString() : '')),
+                        }
+                      : null,
+                  icon: Icon(Icons.reply),
+                  label:
+                      Text(_numOfReplies > 0 ? _numOfReplies.toString() : '')),
           ],
         );
       },
@@ -143,7 +152,11 @@ class _VideoCommentState extends State<VideoComment> {
   Widget _buildCommentReplies() {
     return TextButton(
         onPressed: () {
-          print('Show replies');
+          showMaterialModalBottomSheet(
+            context: context,
+            builder: (context) =>
+                VideoCommentReplies(video: widget.videoComment.video!),
+          );
         },
         child: Text('SHOW $_numOfReplies REPLIES'));
   }
