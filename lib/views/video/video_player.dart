@@ -48,7 +48,10 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return AspectRatio(
-              aspectRatio: 16 / 9, child: Chewie(controller: chewieController));
+              aspectRatio: 16 / 9,
+              child: Container(
+                  color: Colors.black,
+                  child: Chewie(controller: chewieController)));
         } else {
           // If the VideoPlayerController is still initializing, show a
           // loading spinner.
@@ -57,50 +60,6 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
           );
         }
       },
-    );
-  }
-}
-
-/// Controls Overlay (Play button)
-class ControlsOverlay extends StatefulWidget {
-  final VideoPlayerController controller;
-  const ControlsOverlay({Key? key, required this.controller}) : super(key: key);
-
-  @override
-  _ControlsOverlayState createState() => _ControlsOverlayState();
-}
-
-class _ControlsOverlayState extends State<ControlsOverlay> {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        AnimatedSwitcher(
-          duration: Duration(milliseconds: 50),
-          reverseDuration: Duration(milliseconds: 200),
-          child: widget.controller.value.isPlaying
-              ? SizedBox.shrink()
-              : Container(
-                  color: Colors.black26,
-                  child: Center(
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 70.0,
-                    ),
-                  ),
-                ),
-        ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              widget.controller.value.isPlaying
-                  ? widget.controller.pause()
-                  : widget.controller.play();
-            });
-          },
-        ),
-      ],
     );
   }
 }

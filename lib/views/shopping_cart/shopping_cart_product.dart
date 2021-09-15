@@ -148,7 +148,7 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
             Row(
               children: [
                 _buildPrice(),
-                _buildQty(),
+                if (!widget.isVideo) _buildQty(),
               ],
             ),
           ],
@@ -212,29 +212,22 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
         // Minus
         GestureDetector(
           onTap: () {
-            if (!widget.isVideo) {
-              setState(() {
-                if (count > 1) count--;
-              });
-            }
+            setState(() {
+              if (count > 1) count--;
+            });
           },
           onLongPressStart: (details) {
-            if (!widget.isVideo) {
-              _buttonPressed = true;
-              _changeCounterWhilePressed(CounterMode.decrease);
-            }
+            _buttonPressed = true;
+            _changeCounterWhilePressed(CounterMode.decrease);
           },
           onLongPressEnd: (details) {
-            if (!widget.isVideo) {
-              _buttonPressed = false;
-            }
+            _buttonPressed = false;
           },
           child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: count == 1 || widget.isVideo
-                    ? Colors.grey.shade300
-                    : Colors.black,
+                borderRadius:
+                    BorderRadius.circular(AppThemeSize.appBorderRadius),
+                color: count == 1 ? Colors.grey.shade300 : Colors.black,
               ),
               width: 30,
               child: AspectRatio(
@@ -253,29 +246,22 @@ class _ShoppingCartProductState extends State<ShoppingCartProduct> {
         // Add
         GestureDetector(
           onTap: () {
-            if (!widget.isVideo) {
-              setState(() {
-                count++;
-              });
-            }
+            setState(() {
+              count++;
+            });
           },
           onLongPressStart: (details) {
-            if (!widget.isVideo) {
-              _buttonPressed = true;
-              _changeCounterWhilePressed(CounterMode.increase);
-            }
+            _buttonPressed = true;
+            _changeCounterWhilePressed(CounterMode.increase);
           },
           onLongPressEnd: (details) {
-            if (!widget.isVideo) {
-              _buttonPressed = false;
-            }
+            _buttonPressed = false;
           },
           child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: widget.isVideo
-                    ? Colors.grey.shade300
-                    : AppThemeColor.appSecondaryColor,
+                borderRadius:
+                    BorderRadius.circular(AppThemeSize.appBorderRadius),
+                color: AppThemeColor.appSecondaryColor,
               ),
               width: 30,
               child: AspectRatio(

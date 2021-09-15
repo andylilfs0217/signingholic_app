@@ -25,15 +25,15 @@ class _TagChipState extends State<TagChip> {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      label: Text(
-        widget.label,
-      ),
+      label: Text(widget.label),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       backgroundColor: widget.backgroundColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppThemeSize.tagChipBorderRadius),
+        borderRadius: BorderRadius.circular(AppThemeSize.appBorderRadius),
       ),
-      labelStyle: TextStyle(color: widget.textColor),
+      labelStyle: TextStyle(color: widget.textColor, fontSize: 12),
+      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
+      visualDensity: VisualDensity(vertical: VisualDensity.minimumDensity),
     );
   }
 }

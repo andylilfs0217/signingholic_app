@@ -9,6 +9,7 @@ import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
 import 'package:singingholic_app/data/models/video/video_cart_item.dart';
+import 'package:singingholic_app/data/models/video/video_category.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
@@ -76,9 +77,12 @@ class _VideoPageState extends State<VideoPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(
+                          height: AppThemeSize.defaultItemVerticalPaddingSize),
                       _buildVideoPlayer(
                           videoModel: state.videoModel,
                           videoFormats: state.videoFormatModel),
+                      _buildCategory(categories: state.videoModel.categories),
                       _buildTitle(title: state.videoModel.name),
                       _buildStatus(videoModel: state.videoModel),
                       _buildTabBarController(videoModel: state.videoModel),
@@ -116,6 +120,26 @@ class _VideoPageState extends State<VideoPage> {
     }
   }
 
+  /// Create Item category text
+  Widget _buildCategory({List? categories}) {
+    return Padding(
+      padding:
+          const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize / 2),
+      child: RichText(
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        text: TextSpan(
+          style: Theme.of(context)
+              .textTheme
+              .bodyText2!
+              .apply(color: AppThemeColor.appPrimaryColor, fontSizeDelta: -1),
+          children:
+              categories?.map((e) => TextSpan(text: '${e.name} ')).toList(),
+        ),
+      ),
+    );
+  }
+
   /// Create video title
   Widget _buildTitle({String? title}) {
     return Padding(
@@ -142,7 +166,7 @@ class _VideoPageState extends State<VideoPage> {
           vertical: AppThemeSize.defaultItemVerticalPaddingSize),
       child: Text(
         status,
-        style: Theme.of(context).textTheme.bodyText2,
+        style: TextStyle(fontSize: 14, color: Color(0xFF707070)),
       ),
     );
   }

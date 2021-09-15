@@ -81,7 +81,7 @@ class SingingholicApp extends StatelessWidget {
                     CommentRepository(commentProvider: CommentProvider()))),
       ],
       child: MaterialApp(
-        title: 'Singingholic App',
+        title: APP_NAME,
         theme: appThemeData,
         initialRoute: AppRoute.HOME,
         onGenerateRoute: AppRouteGenerator.generateRoute,
