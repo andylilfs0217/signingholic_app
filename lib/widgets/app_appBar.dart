@@ -47,12 +47,12 @@ class _AppAppBarState extends State<AppAppBar> {
               child: Icon(Icons.shopping_cart),
               toAnimate: false,
               shape: BadgeShape.circle,
-              badgeColor: AppThemeColor.appSecondaryColor,
+              badgeColor: Color(0xFFF16C5D),
               // If the member hasn't logged in, badge won't be shown
               badgeContent: Text(
                   state is LoginSuccessState ? qty.toString() : '',
                   style: TextStyle(color: Colors.white)),
-              showBadge: state is LoginSuccessState,
+              showBadge: state is LoginSuccessState && qty > 0,
             ),
             onPressed: () {
               AppNavigator.goTo(context, AppRoute.SHOPPING_CART, then: () {

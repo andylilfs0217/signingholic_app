@@ -74,7 +74,7 @@ class SingingholicApp extends StatelessWidget {
                     CheckoutRepository(checkoutProvider: CheckoutProvider()))),
       ],
       child: MaterialApp(
-        title: 'Singingholic App',
+        title: APP_NAME,
         theme: appThemeData,
         initialRoute: AppRoute.HOME,
         onGenerateRoute: AppRouteGenerator.generateRoute,

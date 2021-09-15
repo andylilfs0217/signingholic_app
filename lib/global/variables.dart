@@ -25,4 +25,8 @@ bool hideNavBar = false;
 int accountId = 52;
 
 /// Global paths
-const String LOGO_PATH = 'assets/icons/app_logo.jpg';
+const String LOGO_PATH = 'assets/icons/app_logo.png';
+
+/// App Parameters
+const String APP_NAME = 'Circle Studio';
+const String APP_TITLE = 'Circle Studio';
