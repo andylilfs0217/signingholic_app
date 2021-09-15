@@ -35,6 +35,9 @@ class VideoPage extends StatefulWidget {
 }
 
 class _VideoPageState extends State<VideoPage> {
+  /// If true, the video is purchased
+  bool isPurchased = false;
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +51,7 @@ class _VideoPageState extends State<VideoPage> {
         if (state is LoginSuccessState) {
           memberId = state.memberModel.id;
         }
-        // Create video list fetch event
+        // Create video fetch event
         context
             .read<VideoBloc>()
             .add(FetchVideoEvent(id: widget.id, memberId: memberId));
@@ -70,6 +73,8 @@ class _VideoPageState extends State<VideoPage> {
           return Center(child: AppCircularLoading());
         } else if (state is VideoFetchSuccessState) {
           // If get video success
+          isPurchased = state.videoFormatModel != null &&
+              state.videoFormatModel!.length > 0;
           return Column(
             children: [
               Expanded(
@@ -189,10 +194,13 @@ class _VideoPageState extends State<VideoPage> {
 
   /// Create tab bar
   Widget _buildTabBar() {
-    return TabBar(tabs: [
-      Tab(text: 'Description'),
-      Tab(text: 'Discussion'),
-    ]);
+    return TabBar(
+      tabs: [
+        Tab(text: 'Description'),
+        Tab(text: 'Discussion'),
+      ],
+      labelColor: AppThemeColor.appSecondaryColor,
+    );
   }
 
   /// Create view for each tab
@@ -201,7 +209,7 @@ class _VideoPageState extends State<VideoPage> {
       height: 500,
       child: TabBarView(children: [
         _buildDescription(videoModel: videoModel),
-        _buildDiscussion(),
+        _buildDiscussion(videoModel: videoModel),
       ]),
     );
   }
@@ -216,11 +224,11 @@ class _VideoPageState extends State<VideoPage> {
   }
 
   /// Create tab view of discussion
-  Widget _buildDiscussion() {
+  Widget _buildDiscussion({required VideoModel videoModel}) {
     return Padding(
       padding: const EdgeInsets.symmetric(
           vertical: AppThemeSize.defaultItemVerticalPaddingSize),
-      child: VideoDiscussion(videoId: widget.id),
+      child: VideoDiscussion(video: videoModel, isPurchased: isPurchased),
     );
   }
 

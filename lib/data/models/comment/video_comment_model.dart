@@ -2,20 +2,20 @@ import 'package:singingholic_app/data/models/comment/comment_model.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 
 class VideoCommentModel extends CommentModel {
-  VideoModel video;
-  covariant VideoCommentModel? parentComment;
+  VideoModel? video;
+  VideoCommentModel? parentComment;
   List? childrenComments;
 
   VideoCommentModel(
       {required id,
-      required member,
-      required comment,
-      required this.video,
+      member,
+      comment,
+      this.video,
       this.parentComment,
       this.childrenComments,
       stars,
-      required createTime,
-      required updateTime})
+      createTime,
+      updateTime})
       : super(
             id: id,
             member: member,
@@ -25,7 +25,8 @@ class VideoCommentModel extends CommentModel {
             updateTime: updateTime);
 
   VideoCommentModel.fromJson(Map<String, dynamic> json)
-      : video = VideoModel.fromJson(json['video']),
+      : video =
+            json['video'] != null ? VideoModel.fromJson(json['video']) : null,
         parentComment = json['parentComment'] != null
             ? VideoCommentModel.fromJson(json['parentComment'])
             : null,
@@ -36,7 +37,7 @@ class VideoCommentModel extends CommentModel {
 
   Map<String, dynamic> toJson() => {
         ...super.toJson(),
-        'videoId': video.toJson(),
+        'videoId': video?.toJson(),
         'parentComment': parentComment?.toJson(),
         'childrenComments': childrenComments?.map((e) => e.toJson()).toList()
       };

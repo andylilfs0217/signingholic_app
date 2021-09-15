@@ -21,7 +21,12 @@ class _AppDialogState extends State<AppDialog> {
         borderRadius: BorderRadius.circular(AppThemeSize.appBorderRadius),
       ),
       elevation: 0,
-      child: widget.child,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          widget.child,
+        ],
+      ),
     );
   }
 }

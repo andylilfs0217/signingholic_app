@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/data/models/comment/video_comment_model.dart';
+import 'package:singingholic_app/views/video/video_comment_dialog.dart';
 
 /// The like and dislike status of the user
 enum LikeStatus { LIKE, DISLIKE, NONE }
@@ -39,7 +42,9 @@ class _VideoCommentState extends State<VideoComment> {
         children: [
           _buildCommentHeader(),
           _buildCommentRating(),
-          _buildCommentText(),
+          if (widget.videoComment.comment != null &&
+              widget.videoComment.comment!.isNotEmpty)
+            _buildCommentText(),
           _buildCommentLikes(),
           if (_numOfReplies > 0) _buildCommentReplies(),
         ],
@@ -51,12 +56,13 @@ class _VideoCommentState extends State<VideoComment> {
   Widget _buildCommentHeader() {
     return RichText(
         text: TextSpan(
-            text: widget.videoComment.member.name,
+            text: widget.videoComment.member?.name ?? 'Unknown',
             style: Theme.of(context).textTheme.subtitle2,
             children: [
           TextSpan(text: ' - '),
           TextSpan(
-              text: _buildNowAndTimeDifference(widget.videoComment.updateTime)),
+              text: _buildNowAndTimeDifference(
+                  widget.videoComment.updateTime ?? DateTime.now())),
         ]));
   }
 
@@ -73,47 +79,63 @@ class _VideoCommentState extends State<VideoComment> {
 
   /// The comment of the user
   Widget _buildCommentText() {
-    return Text(widget.videoComment.comment);
+    return Text(widget.videoComment.comment!);
   }
 
   /// Button row for likes, dislikes and replies
   Widget _buildCommentLikes() {
-    return Row(
-      children: [
-        // Like button
-        TextButton.icon(
-            onPressed: () {
-              setState(() {
-                _likeStatus = _likeStatus == LikeStatus.LIKE
-                    ? LikeStatus.NONE
-                    : LikeStatus.LIKE;
-              });
-            },
-            icon: Icon(_likeStatus == LikeStatus.LIKE
-                ? Icons.thumb_up
-                : Icons.thumb_up_outlined),
-            label: Text('105')),
-        // Dislike button
-        TextButton.icon(
-            onPressed: () {
-              setState(() {
-                _likeStatus = _likeStatus == LikeStatus.DISLIKE
-                    ? LikeStatus.NONE
-                    : LikeStatus.DISLIKE;
-              });
-            },
-            icon: Icon(_likeStatus == LikeStatus.DISLIKE
-                ? Icons.thumb_down
-                : Icons.thumb_down_alt_outlined),
-            label: Text('12')),
-        // Reply button
-        TextButton.icon(
-            onPressed: () {
-              print('Reply');
-            },
-            icon: Icon(Icons.reply),
-            label: Text(_numOfReplies > 0 ? _numOfReplies.toString() : '')),
-      ],
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return Row(
+          children: [
+            // Like button
+            TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _likeStatus = _likeStatus == LikeStatus.LIKE
+                        ? LikeStatus.NONE
+                        : LikeStatus.LIKE;
+                  });
+                },
+                icon: Icon(_likeStatus == LikeStatus.LIKE
+                    ? Icons.thumb_up
+                    : Icons.thumb_up_outlined),
+                label: Text('0')),
+            // Dislike button
+            TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _likeStatus = _likeStatus == LikeStatus.DISLIKE
+                        ? LikeStatus.NONE
+                        : LikeStatus.DISLIKE;
+                  });
+                },
+                icon: Icon(_likeStatus == LikeStatus.DISLIKE
+                    ? Icons.thumb_down
+                    : Icons.thumb_down_alt_outlined),
+                label: Text('0')),
+            // Reply button
+            TextButton.icon(
+                onPressed: state is LoginSuccessState
+                    ? () {
+                        showDialog(
+                            context: context,
+                            builder: (_) => VideoCommentDialog(
+                                  video: widget.videoComment.video!,
+                                  member: widget.videoComment.member!,
+                                  parentComment: widget.videoComment,
+                                )).then((value) {
+                          setState(() {
+                            if (value != null) _numOfReplies += value as int;
+                          });
+                        });
+                      }
+                    : null,
+                icon: Icon(Icons.reply),
+                label: Text(_numOfReplies > 0 ? _numOfReplies.toString() : '')),
+          ],
+        );
+      },
     );
   }
 

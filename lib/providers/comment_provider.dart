@@ -29,4 +29,38 @@ class CommentProvider {
       throw Exception(e);
     }
   }
+
+  Future<VideoCommentModel> createVideoComment(
+      {required int videoId,
+      required int memberId,
+      required num rating,
+      required String comment,
+      int? parentCommentId}) async {
+    try {
+      Uri apiUri = PathUtils.getApiUri('/api/ecommerce/comment/video');
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+      };
+      Map<String, dynamic> bodyJson = {
+        'video': videoId,
+        'member': memberId,
+        'comment': comment,
+        'stars': rating,
+        'parentComment': parentCommentId,
+      };
+      String body = jsonEncode(bodyJson);
+      final response = await http.post(apiUri, headers: headers, body: body);
+      var responseBody = jsonDecode(response.body)?['payload'];
+      responseBody['video'] = {'id': responseBody['video']};
+      responseBody['member'] = {'id': responseBody['member']};
+      if (responseBody['parentComment'] != null) {
+        responseBody['parentComment'] = {'id': responseBody['parentComment']};
+      }
+      VideoCommentModel result = VideoCommentModel.fromJson(responseBody);
+
+      return result;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }
