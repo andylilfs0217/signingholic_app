@@ -154,8 +154,9 @@ class _VideoCommentState extends State<VideoComment> {
         onPressed: () {
           showMaterialModalBottomSheet(
             context: context,
-            builder: (context) =>
-                VideoCommentReplies(video: widget.videoComment.video!),
+            builder: (context) => VideoCommentReplies(
+                video: widget.videoComment.video!,
+                parentComment: widget.videoComment),
           );
         },
         child: Text('SHOW $_numOfReplies REPLIES'));

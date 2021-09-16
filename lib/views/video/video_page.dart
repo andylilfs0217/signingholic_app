@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,8 @@ import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 import 'package:singingholic_app/data/models/video/video_category.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/global/variables.dart';
+import 'package:singingholic_app/routes/app_router.dart';
+import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/views/error/oops_widget.dart';
 import 'package:singingholic_app/views/video/video_discussion.dart';
@@ -34,13 +37,18 @@ class VideoPage extends StatefulWidget {
   _VideoPageState createState() => _VideoPageState();
 }
 
-class _VideoPageState extends State<VideoPage> {
+class _VideoPageState extends State<VideoPage>
+    with SingleTickerProviderStateMixin {
   /// If true, the video is purchased
   bool isPurchased = false;
+
+  /// Tab bar controller
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -55,10 +63,9 @@ class _VideoPageState extends State<VideoPage> {
         context
             .read<VideoBloc>()
             .add(FetchVideoEvent(id: widget.id, memberId: memberId));
-        return AppScaffold(
+        return Scaffold(
           appBar: AppAppBar(appBar: AppBar()),
           body: _buildBody(),
-          hasDrawer: false,
         );
       },
     );
@@ -76,25 +83,17 @@ class _VideoPageState extends State<VideoPage> {
           isPurchased = state.videoFormatModel != null &&
               state.videoFormatModel!.length > 0;
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                          height: AppThemeSize.defaultItemVerticalPaddingSize),
-                      _buildVideoPlayer(
-                          videoModel: state.videoModel,
-                          videoFormats: state.videoFormatModel),
-                      _buildCategory(categories: state.videoModel.categories),
-                      _buildTitle(title: state.videoModel.name),
-                      _buildStatus(videoModel: state.videoModel),
-                      _buildTabBarController(videoModel: state.videoModel),
-                    ],
-                  ),
-                ),
-              ),
+              _buildVideoPlayer(
+                  videoModel: state.videoModel,
+                  videoFormats: state.videoFormatModel),
+              _buildCategory(categories: state.videoModel.categories),
+              _buildTitle(title: state.videoModel.name),
+              _buildStatus(videoModel: state.videoModel),
+              _buildTabBar(),
+              Expanded(child: _buildTabBarView(videoModel: state.videoModel)),
               if (state.videoFormatModel == null ||
                   state.videoFormatModel!.length == 0)
                 _buildButtonBar(videoModel: state.videoModel),
@@ -129,7 +128,7 @@ class _VideoPageState extends State<VideoPage> {
   Widget _buildCategory({List? categories}) {
     return Padding(
       padding:
-          const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize / 2),
+          const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
       child: RichText(
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
@@ -148,8 +147,8 @@ class _VideoPageState extends State<VideoPage> {
   /// Create video title
   Widget _buildTitle({String? title}) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: AppThemeSize.defaultItemVerticalPaddingSize),
+      padding:
+          const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
       child: Text(
         title ?? 'Title not found',
         style: Theme.of(context).textTheme.bodyText1,
@@ -167,8 +166,8 @@ class _VideoPageState extends State<VideoPage> {
       status = '\$${videoModel.price}';
     }
     return Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: AppThemeSize.defaultItemVerticalPaddingSize),
+      padding:
+          const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
       child: Text(
         status,
         style: TextStyle(fontSize: 14, color: Color(0xFF707070)),
@@ -176,25 +175,10 @@ class _VideoPageState extends State<VideoPage> {
     );
   }
 
-  /// Create tab bar controller
-  Widget _buildTabBarController({required VideoModel videoModel}) {
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildTabBar(),
-          _buildTabBarView(videoModel: videoModel),
-        ],
-      ),
-    );
-  }
-
   /// Create tab bar
   Widget _buildTabBar() {
     return TabBar(
+      controller: _tabController,
       tabs: [
         Tab(text: 'Description'),
         Tab(text: 'Discussion'),
@@ -205,20 +189,17 @@ class _VideoPageState extends State<VideoPage> {
 
   /// Create view for each tab
   Widget _buildTabBarView({required VideoModel videoModel}) {
-    return Container(
-      height: 500,
-      child: TabBarView(children: [
-        _buildDescription(videoModel: videoModel),
-        _buildDiscussion(videoModel: videoModel),
-      ]),
-    );
+    return TabBarView(controller: _tabController, children: [
+      _buildDescription(videoModel: videoModel),
+      _buildDiscussion(videoModel: videoModel),
+    ]);
   }
 
   /// Create tab view of description
   Widget _buildDescription({required VideoModel videoModel}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: AppThemeSize.defaultItemVerticalPaddingSize),
+      padding:
+          const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
       child: Text(videoModel.description ?? ''),
     );
   }
@@ -226,8 +207,8 @@ class _VideoPageState extends State<VideoPage> {
   /// Create tab view of discussion
   Widget _buildDiscussion({required VideoModel videoModel}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: AppThemeSize.defaultItemVerticalPaddingSize),
+      padding:
+          const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
       child: VideoDiscussion(video: videoModel, isPurchased: isPurchased),
     );
   }
@@ -276,50 +257,54 @@ class _VideoPageState extends State<VideoPage> {
             Divider(),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
-                  onPressed: state is LoginSuccessState && !isAdded
-                      ? () {
-                          setState(() {
-                            // Put the current video into video cart
-                            var videoCart = state.memberModel.videoCart!;
-                            var id = videoCart.items?.length ?? 0;
-                            var qty = 1;
-                            var unit = videoModel?.price ?? 0;
-                            var unitDiscounted =
-                                unit - (videoModel?.discountPc ?? 0);
-                            var total = unitDiscounted * qty;
-                            var discount = unitDiscounted * qty;
-                            var videoCartItem = VideoCartItemModel(
-                                id: id,
-                                qty: qty,
-                                total: total,
-                                discount: discount,
-                                unit: unit,
-                                unitDiscounted: unitDiscounted,
-                                video: VideoModel(id: videoModel!.id));
-                            videoCart.items!.add(videoCartItem);
-                            // Update item total of video cart
-                            var videoCartJson = videoCart.toJson();
-                            videoCartJson['itemTotal'] += total;
-                            videoCart =
-                                new VideoCartModel.fromJson(videoCartJson);
+              child: Padding(
+                padding: const EdgeInsets.all(
+                    AppThemeSize.defaultItemVerticalPaddingSize),
+                child: ElevatedButton.icon(
+                    onPressed: state is LoginSuccessState && !isAdded
+                        ? () {
+                            setState(() {
+                              // Put the current video into video cart
+                              var videoCart = state.memberModel.videoCart!;
+                              var id = videoCart.items?.length ?? 0;
+                              var qty = 1;
+                              var unit = videoModel?.price ?? 0;
+                              var unitDiscounted =
+                                  unit - (videoModel?.discountPc ?? 0);
+                              var total = unitDiscounted * qty;
+                              var discount = unitDiscounted * qty;
+                              var videoCartItem = VideoCartItemModel(
+                                  id: id,
+                                  qty: qty,
+                                  total: total,
+                                  discount: discount,
+                                  unit: unit,
+                                  unitDiscounted: unitDiscounted,
+                                  video: VideoModel(id: videoModel!.id));
+                              videoCart.items!.add(videoCartItem);
+                              // Update item total of video cart
+                              var videoCartJson = videoCart.toJson();
+                              videoCartJson['itemTotal'] += total;
+                              videoCart =
+                                  new VideoCartModel.fromJson(videoCartJson);
 
-                            // state.memberModel.videoCart = videoCart;
-                            context.read<LoginBloc>().add(
-                                LoginUpdateVideoCartEvent(
-                                    videoCartModel: videoCart));
+                              // state.memberModel.videoCart = videoCart;
+                              context.read<LoginBloc>().add(
+                                  LoginUpdateVideoCartEvent(
+                                      videoCartModel: videoCart));
 
-                            context.read<CartBloc>().add(UpdateVideoCartEvent(
-                                videoCartModel: videoCart));
-                          });
-                        }
-                      : null,
-                  icon: Icon(Icons.shopping_cart),
-                  label: Text(!(state is LoginSuccessState)
-                      ? 'Please log in first'
-                      : isAdded
-                          ? 'Already in shopping cart'
-                          : 'Add to cart')),
+                              context.read<CartBloc>().add(UpdateVideoCartEvent(
+                                  videoCartModel: videoCart));
+                            });
+                          }
+                        : null,
+                    icon: Icon(Icons.shopping_cart),
+                    label: Text(!(state is LoginSuccessState)
+                        ? 'Please log in first'
+                        : isAdded
+                            ? 'Already in shopping cart'
+                            : 'Add to cart')),
+              ),
             ),
             SizedBox(height: 10),
           ],

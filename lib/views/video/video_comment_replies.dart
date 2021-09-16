@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/data/models/comment/video_comment_model.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
@@ -13,8 +14,14 @@ class VideoCommentReplies extends StatefulWidget {
   /// Video model
   final VideoModel video;
 
+  /// Parent comment
+  final VideoCommentModel parentComment;
+
   const VideoCommentReplies(
-      {Key? key, this.isPurchased = true, required this.video})
+      {Key? key,
+      this.isPurchased = true,
+      required this.video,
+      required this.parentComment})
       : super(key: key);
 
   @override
@@ -26,7 +33,6 @@ class _VideoCommentRepliesState extends State<VideoCommentReplies> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeader(),
         _buildAddReply(),
@@ -36,35 +42,60 @@ class _VideoCommentRepliesState extends State<VideoCommentReplies> {
   }
 
   Widget _buildHeader() {
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-      icon: Icon(Icons.close),
+    return Container(
+      width: double.infinity,
+      alignment: Alignment.centerRight,
+      child: IconButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        icon: Icon(Icons.close),
+      ),
     );
   }
 
   Widget _buildAddReply() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      return TextButton.icon(
-          onPressed: state is LoginSuccessState && widget.isPurchased
-              ? () {
-                  showDialog(
-                      context: context,
-                      builder: (_) => VideoCommentDialog(
-                          video: widget.video, member: state.memberModel));
-                }
-              : null,
-          icon: Icon(Icons.add_comment),
-          label: Text(state is! LoginSuccessState
-              ? 'Log in to leave a comment'
-              : !widget.isPurchased
-                  ? 'Purchase the video to leave a comment'
-                  : 'Leave a comment'));
+      return Container(
+        width: double.infinity,
+        child: TextButton.icon(
+            onPressed: state is LoginSuccessState && widget.isPurchased
+                ? () {
+                    showDialog(
+                        context: context,
+                        builder: (_) => VideoCommentDialog(
+                              video: widget.video,
+                              member: state.memberModel,
+                              parentComment: widget.parentComment,
+                            ));
+                  }
+                : null,
+            icon: Icon(Icons.add_comment),
+            label: Text(state is! LoginSuccessState
+                ? 'Log in to leave a comment'
+                : !widget.isPurchased
+                    ? 'Purchase the video to leave a comment'
+                    : 'Leave a comment')),
+      );
     });
   }
 
   Widget _buildReplies() {
-    return Container();
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.5,
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+          horizontal: AppThemeSize.defaultItemHorizontalPaddingSize),
+      child: SingleChildScrollView(
+        child: Column(
+          children: widget.parentComment.childrenComments!
+              .map((e) => VideoComment(
+                    videoComment: e,
+                    allowReply: false,
+                  ))
+              .toList(),
+        ),
+      ),
+    );
   }
 }
