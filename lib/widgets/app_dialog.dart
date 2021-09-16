@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:singingholic_app/assets/app_theme.dart';
 
 /// App customized dialog
 class AppDialog extends StatefulWidget {
@@ -17,10 +18,15 @@ class _AppDialogState extends State<AppDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppThemeSize.appBorderRadius),
       ),
       elevation: 0,
-      child: widget.child,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          widget.child,
+        ],
+      ),
     );
   }
 }

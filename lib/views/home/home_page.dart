@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     return AppScaffold(
       appBar: AppAppBar(
         appBar: AppBar(),
-        title: 'Home Page',
+        title: APP_TITLE,
       ),
       body: _buildBody(),
     );
@@ -113,6 +113,9 @@ class _HomePageState extends State<HomePage> {
           TextButton(
             onPressed: seeAll,
             child: Text('See All'),
+            style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all(Color(0xFF707070)),
+                textStyle: MaterialStateProperty.all(TextStyle(fontSize: 14))),
           ),
       ],
     );

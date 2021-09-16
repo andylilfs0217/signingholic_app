@@ -93,7 +93,7 @@ class _ItemCardState extends State<ItemCard> {
   Widget _buildImage() {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppThemeSize.cardBorderRadius)),
+          top: Radius.circular(AppThemeSize.appBorderRadius)),
       child: AspectRatio(
         aspectRatio: widget.imageRatio,
         child: widget.assetImagePath != null
@@ -124,8 +124,8 @@ class _ItemCardState extends State<ItemCard> {
         text: TextSpan(
           style: Theme.of(context)
               .textTheme
-              .bodyText1!
-              .apply(color: AppThemeColor.appPrimaryColor),
+              .bodyText2!
+              .apply(color: AppThemeColor.appPrimaryColor, fontSizeDelta: -1),
           children:
               widget.categories!.map((e) => TextSpan(text: '$e ')).toList(),
         ),
@@ -173,7 +173,7 @@ class _ItemCardState extends State<ItemCard> {
           const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize / 2),
       child: Text(
         widget.subtitle ?? '',
-        style: Theme.of(context).textTheme.bodyText2,
+        style: TextStyle(fontSize: 14, color: Color(0xFF707070)),
         maxLines: widget.titleMaxLine,
         overflow: TextOverflow.ellipsis,
       ),
