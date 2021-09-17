@@ -37,7 +37,7 @@ class CommentProvider {
       required String comment,
       int? parentCommentId}) async {
     try {
-      Uri apiUri = PathUtils.getApiUri('/api/ecommerce/comment/video');
+      Uri apiUri = PathUtils.getApiUri('/api/ecommerce/comment');
       Map<String, String> headers = {
         "Content-Type": "application/json",
       };
