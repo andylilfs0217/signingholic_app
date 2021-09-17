@@ -23,7 +23,7 @@ class SignUpProvider {
           'name': name,
           'email': email,
           'mobile': mobile,
-          'data': {},
+          'data': '{}',
           'password': password,
           'password2': password2,
         }

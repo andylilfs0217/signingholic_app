@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/sign_up/sign_up_bloc.dart';
 import 'package:singingholic_app/global/variables.dart';
+import 'package:singingholic_app/routes/app_router.dart';
+import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
+import 'package:singingholic_app/widgets/app_dialog.dart';
 import 'package:singingholic_app/widgets/app_scaffold.dart';
 import 'package:validators/validators.dart';
 
@@ -55,14 +59,28 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildBody() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildLogo(),
-        _buildForm(),
-        _buildWarnings(),
-        _buildSignUpButton(),
-      ],
+    return BlocListener<SignUpBloc, SignUpState>(
+      listener: (context, state) {
+        if (state is SignUpSuccessState) {
+          // Show a pop up to notify that registration is completed and go check their email
+          showDialog(
+            context: context,
+            builder: (context) => _buildSignUpSuccessDialog(),
+            barrierDismissible: false,
+          );
+        }
+      },
+      child: Center(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            _buildLogo(),
+            _buildForm(),
+            _buildWarnings(),
+            _buildSignUpButton(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -105,7 +123,7 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'This is warning text',
+                state.errorMsg,
                 style: TextStyle(color: Colors.red),
               ),
             ),
@@ -265,5 +283,21 @@ class _SignUpPageState extends State<SignUpPage> {
         return null;
       },
     );
+  }
+
+  /// Alert dialog on sign up success
+  Widget _buildSignUpSuccessDialog() {
+    return AlertDialog(
+        title: Text('Sign Up Success'),
+        content: Text(
+            'Thank you for registering as a member of $APP_TITLE. We have sent you an email to ${_usernameController.text} to verify your email address and activate your account.'),
+        actions: [
+          // Confirm button
+          TextButton(
+              onPressed: () {
+                AppNavigator.goTo(context, AppRoute.HOME);
+              },
+              child: Text('Confirm')),
+        ]);
   }
 }
