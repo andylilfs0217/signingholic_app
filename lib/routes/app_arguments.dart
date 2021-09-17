@@ -20,3 +20,11 @@ class CheckoutArguments {
 
   CheckoutArguments({required this.videoItems, required this.videoCart});
 }
+
+/// Arguments which will be passed to Sign up page
+class SignUpArguments {
+  final String? email;
+  final String? password;
+
+  SignUpArguments({this.email, this.password});
+}

@@ -22,15 +22,11 @@ environment:
 
 dependencies:
   badges: ^2.0.1
-  # better_player: ^0.0.73
+  better_player: ^0.0.73
   cached_network_image: ^3.1.0
-  chewie: ^1.2.2
-  # cloud_firestore: ^2.5.2
   cupertino_icons: ^1.0.3
   easy_localization: ^3.0.0
   equatable: ^2.0.3
-  # firebase_auth: ^3.1.1
-  # firebase_core: ^1.6.0
   flutter:
     sdk: flutter
   flutter_bloc: ^7.1.0
@@ -44,7 +40,6 @@ dependencies:
   http: ^0.13.3
   modal_bottom_sheet: ^2.0.0
   validators: ^3.0.0
-  video_player: ^2.1.12
 
 dev_dependencies:
   flutter_test:

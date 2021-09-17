@@ -1,30 +1,22 @@
-// import 'package:better_player/better_player.dart';
-import 'package:chewie/chewie.dart';
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:singingholic_app/assets/app_theme.dart';
-import 'package:singingholic_app/widgets/app_circular_loading.dart';
-import 'package:video_player/video_player.dart';
+import 'package:singingholic_app/data/models/video/video_formats.dart';
 
 /// Build video playback area widget
 class VideoPlayerContainer extends StatefulWidget {
-  final String videoUrl;
+  final List<VideoFormatModel> videoFormats;
 
-  const VideoPlayerContainer({Key? key, required this.videoUrl})
+  const VideoPlayerContainer({Key? key, required this.videoFormats})
       : super(key: key);
 
   @override
   _VideoPlayerContainerState createState() => _VideoPlayerContainerState();
 }
 
-class _VideoPlayerContainerState extends State<VideoPlayerContainer>
-    with AutomaticKeepAliveClientMixin {
+class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
   // Variables
-  late VideoPlayerController videoController;
-  ChewieController? chewieController;
-  bool _isVisible = false;
-
-  // late BetterPlayerController _betterPlayerController;
+  late BetterPlayerController _betterPlayerController;
+  GlobalKey _betterPlayerKey = GlobalKey();
 
   @override
   void initState() {
@@ -34,73 +26,45 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer>
 
   @override
   void dispose() {
-    if (chewieController != null && !chewieController!.isFullScreen) {
-      videoController.dispose();
-      chewieController?.dispose();
-    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return chewieController != null &&
-            chewieController!.videoPlayerController.value.isInitialized
-        ? AspectRatio(
-            aspectRatio: 16 / 9,
-            child: Container(
-              color: Colors.black,
-              child: Chewie(
-                controller: chewieController!,
-              ),
-              // child: BetterPlayer(
-              //   controller: _betterPlayerController,
-              // ),
-            ))
-        : AppCircularLoading();
-  }
-
-  Future<void> initializePlayer() async {
-    videoController = VideoPlayerController.network(
-      // "https://ia801602.us.archive.org/11/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4",
-      widget.videoUrl,
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: BetterPlayer(
+        controller: _betterPlayerController,
+        key: _betterPlayerKey,
+      ),
     );
-    await Future.wait([videoController.initialize()]);
-    _createChewieController();
-    setState(() {});
-
-    // BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-    //     BetterPlayerDataSourceType.network, widget.videoUrl);
-    // BetterPlayerConfiguration betterPlayerConfiguration =
-    //     _createBetterPlayerConfiguration();
-    // _betterPlayerController = BetterPlayerController(betterPlayerConfiguration,
-    //     betterPlayerDataSource: betterPlayerDataSource);
   }
 
-  // BetterPlayerConfiguration _createBetterPlayerConfiguration() {
-  //   return BetterPlayerConfiguration(
-  //       autoPlay: true, looping: true, fullScreenByDefault: false);
-  // }
-
-  void _createChewieController() {
-    chewieController = ChewieController(
-      videoPlayerController: videoController,
+  void initializePlayer() {
+    // Better player data source configuration
+    BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      widget.videoFormats.last.url,
+      resolutions: Map.fromIterable(widget.videoFormats,
+          key: (e) => e.qualityLabel, value: (e) => e.url),
+    );
+    // Better player general configuration
+    // TODO: Fix the bug that cannot enter full screen
+    BetterPlayerConfiguration betterPlayerConfiguration =
+        BetterPlayerConfiguration(
       autoPlay: true,
-      looping: true,
-      // deviceOrientationsOnEnterFullScreen: [DeviceOrientation.portraitUp],
-      deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
-      materialProgressColors: ChewieProgressColors(
-          playedColor: AppThemeColor.appPrimaryColor,
-          bufferedColor: AppThemeColor.appPrimaryColor.withOpacity(0.3)),
+      looping: false,
+      fullScreenByDefault: false,
+      fit: BoxFit.contain,
+      autoDispose: false,
+      allowedScreenSleep: false,
+      autoDetectFullscreenDeviceOrientation: true,
     );
-
-    // chewieController!.addListener(() {
-    //   print('!chewieController!.isFullScreen');
-    //   if (!chewieController!.isFullScreen) {
-    //     Navigator.of(context).pop();
-    //   }
-    // });
+    // Initialize Better player controller
+    _betterPlayerController = BetterPlayerController(
+      betterPlayerConfiguration,
+      betterPlayerDataSource: betterPlayerDataSource,
+    );
+    _betterPlayerController.enablePictureInPicture(_betterPlayerKey);
   }
-
-  @override
-  bool get wantKeepAlive => _isVisible;
 }

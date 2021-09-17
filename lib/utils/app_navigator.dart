@@ -4,7 +4,7 @@ class AppNavigator {
   static goTo(BuildContext context, String name,
       {Object? args, Function()? then}) {
     Navigator.pushNamed(context, name, arguments: args).then((value) {
-      then;
+      then?.call();
     });
   }
 

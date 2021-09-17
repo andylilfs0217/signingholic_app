@@ -116,10 +116,8 @@ class _VideoPageState extends State<VideoPage>
           thumbnail: PathUtils.getImagePathWithId(
               accountId, 'video', videoModel.id, videoModel.imagePaths?[0]));
     } else {
-      VideoFormatModel videoFormat = videoFormats.last;
-      String videoUrl = videoFormat.url;
       return VideoPlayerContainer(
-        videoUrl: videoUrl,
+        videoFormats: videoFormats,
       );
     }
   }
