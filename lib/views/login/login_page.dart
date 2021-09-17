@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/global/variables.dart';
+import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/routes/app_router.dart';
 import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
@@ -123,8 +124,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildSignUpButton() {
     return TextButton.icon(
       onPressed: () {
-        // TODO: Implement sign up button
-        print('Sign up');
+        AppNavigator.goTo(context, AppRoute.SIGN_UP,
+            args: SignUpArguments(
+                email: _usernameController.text,
+                password: _passwordController.text));
       },
       icon: Icon(Icons.person),
       label: Text('Sign up'),

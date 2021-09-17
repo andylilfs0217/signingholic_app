@@ -6,6 +6,7 @@ import 'package:singingholic_app/views/contact_us/contact_us_page.dart';
 import 'package:singingholic_app/views/error/page_not_found_page.dart';
 import 'package:singingholic_app/views/home/home_page.dart';
 import 'package:singingholic_app/views/login/login_page.dart';
+import 'package:singingholic_app/views/login/sign_up_page.dart';
 import 'package:singingholic_app/views/payment/payment_page.dart';
 import 'package:singingholic_app/views/settings/settings_page.dart';
 import 'package:singingholic_app/views/shopping_cart/shopping_cart_page.dart';
@@ -25,6 +26,7 @@ class AppRoute {
   static const SETTINGS = '/settings';
   static const CONTACT_US = '/contact-us';
   static const PAYMENT = '/payment';
+  static const SIGN_UP = '/sign-up';
 }
 
 class AppRouteGenerator {
@@ -60,6 +62,11 @@ class AppRouteGenerator {
         return MaterialPageRoute(builder: (_) => ContactUsPage());
       case AppRoute.PAYMENT:
         return MaterialPageRoute(builder: (_) => PaymentPage());
+      case AppRoute.SIGN_UP:
+        final args = settings.arguments as SignUpArguments;
+        return MaterialPageRoute(
+            builder: (_) =>
+                SignUpPage(email: args.email, password: args.password));
       default:
         return MaterialPageRoute(builder: (_) => PageNotFoundPage());
     }

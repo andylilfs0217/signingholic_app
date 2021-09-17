@@ -8,18 +8,21 @@ import 'package:singingholic_app/data/bloc/cart/cart_bloc.dart';
 import 'package:singingholic_app/data/bloc/checkout/checkout_bloc.dart';
 import 'package:singingholic_app/data/bloc/comment/comment_bloc.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
+import 'package:singingholic_app/data/bloc/sign_up/sign_up_bloc.dart';
 import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/bloc/video_list/video_list_bloc.dart';
 import 'package:singingholic_app/data/repo/cart_repository.dart';
 import 'package:singingholic_app/data/repo/checkout_repository.dart';
 import 'package:singingholic_app/data/repo/comment_repository.dart';
 import 'package:singingholic_app/data/repo/login_repository.dart';
+import 'package:singingholic_app/data/repo/sign_up_repository.dart';
 import 'package:singingholic_app/data/repo/video_repository.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/providers/cart_provider.dart';
 import 'package:singingholic_app/providers/checkout_provider.dart';
 import 'package:singingholic_app/providers/comment_provider.dart';
 import 'package:singingholic_app/providers/login_provider.dart';
+import 'package:singingholic_app/providers/sign_up_provider.dart';
 import 'package:singingholic_app/providers/video_provider.dart';
 import 'package:singingholic_app/routes/app_router.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -81,6 +84,10 @@ class SingingholicApp extends StatelessWidget {
             create: (BuildContext context) => CommentBloc(
                 commentRepository:
                     CommentRepository(commentProvider: CommentProvider()))),
+        BlocProvider<SignUpBloc>(
+            create: (BuildContext context) => SignUpBloc(
+                signUpRepository:
+                    SignUpRepository(signUpProvider: SignUpProvider()))),
       ],
       child: MaterialApp(
         title: APP_NAME,
