@@ -22,7 +22,7 @@ class CommentRepository {
   Future<VideoCommentModel> createVideoComment(
       {required VideoModel video,
       required MemberModel member,
-      required num rating,
+      num? rating,
       required String comment,
       VideoCommentModel? parentComment}) async {
     try {

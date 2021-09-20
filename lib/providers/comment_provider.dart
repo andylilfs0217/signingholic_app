@@ -33,7 +33,7 @@ class CommentProvider {
   Future<VideoCommentModel> createVideoComment(
       {required int videoId,
       required int memberId,
-      required num rating,
+      num? rating,
       required String comment,
       int? parentCommentId}) async {
     try {

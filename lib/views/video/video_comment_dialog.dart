@@ -37,6 +37,9 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
   /// Comment controller
   TextEditingController _commentController = TextEditingController();
 
+  /// Form key
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return _buildBody();
@@ -95,12 +98,13 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
         // Send button
         IconButton(
             onPressed: () {
-              context.read<CommentBloc>().add(SendVideoComment(
-                  video: widget.video,
-                  member: widget.member,
-                  comment: _commentController.text,
-                  rating: rating,
-                  parentComment: widget.parentComment));
+              if (_formKey.currentState!.validate())
+                context.read<CommentBloc>().add(SendVideoComment(
+                    video: widget.video,
+                    member: widget.member,
+                    comment: _commentController.text,
+                    rating: widget.parentComment == null ? rating : null,
+                    parentComment: widget.parentComment));
             },
             icon: Icon(Icons.send, color: AppThemeColor.appPrimaryColor))
       ],
@@ -126,13 +130,22 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
   Widget _buildComment() {
     return Container(
       padding: EdgeInsets.all(AppThemeSize.screenPaddingSize),
-      child: TextField(
-        controller: _commentController,
-        keyboardType: TextInputType.multiline,
-        maxLines: 10,
-        autofocus: true,
-        decoration: InputDecoration(
-            hintText: 'Comment (Optional)', border: InputBorder.none),
+      child: Form(
+        key: _formKey,
+        child: TextFormField(
+          controller: _commentController,
+          validator: (val) =>
+              widget.parentComment != null && (val == null || val.isEmpty)
+                  ? 'Comment must not be empty'
+                  : null,
+          keyboardType: TextInputType.multiline,
+          maxLines: 10,
+          autofocus: true,
+          decoration: InputDecoration(
+              hintText:
+                  'Comment ${widget.parentComment == null ? "(Optional)" : ""}',
+              border: InputBorder.none),
+        ),
       ),
     );
   }

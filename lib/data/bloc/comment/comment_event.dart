@@ -18,14 +18,14 @@ class SendVideoComment extends CommentEvent {
   final VideoModel video;
   final MemberModel member;
   final String comment;
-  final num rating;
+  final num? rating;
   final VideoCommentModel? parentComment;
 
   const SendVideoComment(
       {required this.video,
       required this.member,
       required this.comment,
-      required this.rating,
+      this.rating,
       this.parentComment})
       : super();
 }

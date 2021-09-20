@@ -48,7 +48,7 @@ class _VideoCommentState extends State<VideoComment> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildCommentHeader(),
-          _buildCommentRating(),
+          if (widget.allowReply) _buildCommentRating(),
           if (widget.videoComment.comment != null &&
               widget.videoComment.comment!.isNotEmpty)
             _buildCommentText(),
@@ -96,31 +96,31 @@ class _VideoCommentState extends State<VideoComment> {
         return Row(
           children: [
             // Like button
-            TextButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _likeStatus = _likeStatus == LikeStatus.LIKE
-                        ? LikeStatus.NONE
-                        : LikeStatus.LIKE;
-                  });
-                },
-                icon: Icon(_likeStatus == LikeStatus.LIKE
-                    ? Icons.thumb_up
-                    : Icons.thumb_up_outlined),
-                label: Text('0')),
+            // TextButton.icon(
+            //     onPressed: () {
+            //       setState(() {
+            //         _likeStatus = _likeStatus == LikeStatus.LIKE
+            //             ? LikeStatus.NONE
+            //             : LikeStatus.LIKE;
+            //       });
+            //     },
+            //     icon: Icon(_likeStatus == LikeStatus.LIKE
+            //         ? Icons.thumb_up
+            //         : Icons.thumb_up_outlined),
+            //     label: Text('0')),
             // Dislike button
-            TextButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _likeStatus = _likeStatus == LikeStatus.DISLIKE
-                        ? LikeStatus.NONE
-                        : LikeStatus.DISLIKE;
-                  });
-                },
-                icon: Icon(_likeStatus == LikeStatus.DISLIKE
-                    ? Icons.thumb_down
-                    : Icons.thumb_down_alt_outlined),
-                label: Text('0')),
+            // TextButton.icon(
+            //     onPressed: () {
+            //       setState(() {
+            //         _likeStatus = _likeStatus == LikeStatus.DISLIKE
+            //             ? LikeStatus.NONE
+            //             : LikeStatus.DISLIKE;
+            //       });
+            //     },
+            //     icon: Icon(_likeStatus == LikeStatus.DISLIKE
+            //         ? Icons.thumb_down
+            //         : Icons.thumb_down_alt_outlined),
+            //     label: Text('0')),
             // Reply button
             if (widget.allowReply)
               TextButton.icon(
