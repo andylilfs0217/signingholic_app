@@ -52,7 +52,7 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
     // TODO: Fix the bug that cannot enter full screen
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
-      autoPlay: true,
+      autoPlay: false,
       looping: false,
       fullScreenByDefault: false,
       fit: BoxFit.contain,
