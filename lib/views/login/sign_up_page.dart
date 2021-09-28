@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -39,13 +40,17 @@ class _SignUpPageState extends State<SignUpPage> {
   /// Login form controllers
   TextEditingController _nameController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
-  TextEditingController _mobileController = TextEditingController();
+  List<TextEditingController> _fieldControllers = [];
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
+
+  /// Custom fields
+  List fields = [];
 
   @override
   void initState() {
     super.initState();
+    context.read<SignUpBloc>().add(GetSignUpFormEvent());
     _usernameController.text = widget.email ?? '';
     _passwordController.text = widget.password ?? '';
   }
@@ -59,7 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildBody() {
-    return BlocListener<SignUpBloc, SignUpState>(
+    return BlocConsumer<SignUpBloc, SignUpState>(
       listener: (context, state) {
         if (state is SignUpSuccessState) {
           // Show a pop up to notify that registration is completed and go check their email
@@ -70,17 +75,21 @@ class _SignUpPageState extends State<SignUpPage> {
           );
         }
       },
-      child: Center(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            _buildLogo(),
-            _buildForm(),
-            _buildWarnings(),
-            _buildSignUpButton(),
-          ],
-        ),
-      ),
+      builder: (context, state) {
+        return Center(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              _buildLogo(),
+              _buildForm(),
+              _buildWarnings(),
+              if (state is! GetSignUpFormFailState ||
+                  state is! GettingSignUpFormState)
+                _buildSignUpButton(),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -98,17 +107,40 @@ class _SignUpPageState extends State<SignUpPage> {
 
   /// Login form
   Widget _buildForm() {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          _buildName(),
-          _buildEmail(),
-          _buildMobile(),
-          _buildPassword(),
-          _buildConfirmPassword(),
-        ],
-      ),
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      builder: (context, state) {
+        if (state is GettingSignUpFormState) {
+          return AppCircularLoading();
+        } else if (state is GetSignUpFormFailState) {
+          return Text('Sign Up is currently unavailable');
+        } else {
+          var memberForm = state.siteConfig?['memberForm'];
+          fields = memberForm?['fields'] ?? [];
+          fields = fields
+              .where(
+                  (field) => field['mode'] != null && field['mode'] != 'fixed')
+              .toList();
+          List<Widget> fieldWidgets = [];
+          for (var field in fields) {
+            TextEditingController controller = new TextEditingController();
+            _fieldControllers.add(controller);
+            fieldWidgets
+                .add(_buildTextFormField(controller: controller, field: field));
+          }
+          return Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _buildName(),
+                _buildEmail(),
+                ...fieldWidgets,
+                _buildPassword(),
+                _buildConfirmPassword(),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -136,17 +168,53 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   /// Name text form field
+  Widget _buildTextFormField(
+      {required TextEditingController controller, required field}) {
+    var dateFormatter = DateFormat('yyyy-MM-dd');
+    if (field['type'] == 'date')
+      controller.text = dateFormatter.format(DateTime.now());
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: field['title'],
+        contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+      ),
+      minLines: field['type'] == 'textarea' ? 5 : 1,
+      maxLines: field['type'] == 'textarea' ? 5 : 1,
+      validator: (value) {
+        if (field['mode'] == 'required' && (value == null || value.isEmpty)) {
+          return 'This field cannot be empty';
+        }
+        return null;
+      },
+      onTap: field['type'] == 'date'
+          ? () {
+              showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900, 1, 1),
+                      lastDate: DateTime(2050, 12, 31))
+                  .then((value) => {
+                        if (value != null)
+                          controller.text = dateFormatter.format(value)
+                      });
+            }
+          : null,
+      readOnly: field['type'] == 'date',
+    );
+  }
+
+  /// Name text form field
   Widget _buildName() {
     return TextFormField(
       controller: _nameController,
       decoration: InputDecoration(
-        icon: Icon(Icons.person),
         labelText: 'Name',
         contentPadding: EdgeInsets.symmetric(vertical: 10.0),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Name cannot be empty';
+          return 'This field cannot be empty';
         }
         return null;
       },
@@ -158,34 +226,15 @@ class _SignUpPageState extends State<SignUpPage> {
     return TextFormField(
       controller: _usernameController,
       decoration: InputDecoration(
-        icon: Icon(Icons.email),
         labelText: 'Email',
         contentPadding: EdgeInsets.symmetric(vertical: 10.0),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Email cannot be empty';
+          return 'This field cannot be empty';
         }
         if (!isEmail(value)) {
           return 'Email format incorrect';
-        }
-        return null;
-      },
-    );
-  }
-
-  /// Mobile text form field
-  Widget _buildMobile() {
-    return TextFormField(
-      controller: _mobileController,
-      decoration: InputDecoration(
-        icon: Icon(Icons.phone_android),
-        labelText: 'Mobile number',
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Mobile number cannot be empty';
         }
         return null;
       },
@@ -200,7 +249,6 @@ class _SignUpPageState extends State<SignUpPage> {
       enableSuggestions: false,
       autocorrect: false,
       decoration: InputDecoration(
-        icon: Icon(Icons.lock),
         labelText: 'Password',
         suffixIcon: IconButton(
           icon:
@@ -214,7 +262,39 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Password cannot be empty';
+          return 'This field cannot be empty';
+        }
+        return null;
+      },
+    );
+  }
+
+  /// Confirm password text form field
+  Widget _buildConfirmPassword() {
+    return TextFormField(
+      controller: _confirmPasswordController,
+      obscureText: isConfirmPasswordObscure,
+      enableSuggestions: false,
+      autocorrect: false,
+      decoration: InputDecoration(
+        labelText: 'Confirm Password',
+        suffixIcon: IconButton(
+          icon: Icon(isConfirmPasswordObscure
+              ? Icons.visibility_off
+              : Icons.visibility),
+          onPressed: () {
+            setState(() {
+              isConfirmPasswordObscure = !isConfirmPasswordObscure;
+            });
+          },
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'This field cannot be empty';
+        }
+        if (value != _passwordController.text) {
+          return 'The password should be the same you type';
         }
         return null;
       },
@@ -231,10 +311,16 @@ class _SignUpPageState extends State<SignUpPage> {
         return TextButton.icon(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
+              Map<String, dynamic> _inputFields = {};
+              for (var i = 0; i < fields.length; i++) {
+                var field = fields[i]['field'];
+                var text = _fieldControllers[i].text;
+                _inputFields[field] = text;
+              }
               context.read<SignUpBloc>().add(SignUp(
                   name: _nameController.text,
                   email: _usernameController.text,
-                  mobile: _mobileController.text,
+                  inputFields: _inputFields,
                   password: _passwordController.text,
                   password2: _confirmPasswordController.text));
             }
@@ -248,39 +334,6 @@ class _SignUpPageState extends State<SignUpPage> {
             alignment: Alignment.center,
           ),
         );
-      },
-    );
-  }
-
-  /// Confirm password text form field
-  Widget _buildConfirmPassword() {
-    return TextFormField(
-      controller: _confirmPasswordController,
-      obscureText: isConfirmPasswordObscure,
-      enableSuggestions: false,
-      autocorrect: false,
-      decoration: InputDecoration(
-        icon: Icon(Icons.lock),
-        labelText: 'Confirm Password',
-        suffixIcon: IconButton(
-          icon: Icon(isConfirmPasswordObscure
-              ? Icons.visibility_off
-              : Icons.visibility),
-          onPressed: () {
-            setState(() {
-              isConfirmPasswordObscure = !isConfirmPasswordObscure;
-            });
-          },
-        ),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Password cannot be empty';
-        }
-        if (value != _passwordController.text) {
-          return 'The password should be the same you type';
-        }
-        return null;
       },
     );
   }

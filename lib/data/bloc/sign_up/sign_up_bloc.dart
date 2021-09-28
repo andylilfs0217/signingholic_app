@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -20,11 +21,12 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       try {
         yield SignUpProcessingState();
         var response = await signUpRepository.registerMember(
-            email: event.email,
-            password: event.password,
-            mobile: event.mobile,
-            password2: event.password2,
-            name: event.name);
+          email: event.email,
+          name: event.name,
+          inputFields: event.inputFields,
+          password: event.password,
+          password2: event.password2,
+        );
         if (response['succeed'] != null && response['succeed']) {
           yield SignUpSuccessState();
         } else {
@@ -33,6 +35,23 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         }
       } catch (e) {
         yield SignUpFailState(errorMsg: 'Error occurred when signing up');
+        throw Exception(e);
+      }
+    }
+    if (event is GetSignUpFormEvent) {
+      try {
+        yield GettingSignUpFormState();
+        var response = await signUpRepository.getMemberRegistrationConfig();
+        if (response['succeed'] != null && response['succeed']) {
+          var payload = response['payload'];
+          var account = payload?['account'];
+          var siteConfig = jsonDecode(account?['siteConfig']);
+          yield GetSignUpFormSuccessState(siteConfig: siteConfig);
+        } else {
+          yield GetSignUpFormFailState();
+        }
+      } catch (e) {
+        yield GetSignUpFormFailState();
         throw Exception(e);
       }
     }

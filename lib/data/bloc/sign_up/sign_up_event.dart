@@ -10,15 +10,17 @@ abstract class SignUpEvent extends Equatable {
 class SignUp extends SignUpEvent {
   final String name;
   final String email;
-  final String mobile;
+  final Map inputFields;
   final String password;
   final String password2;
 
   const SignUp({
     required this.name,
     required this.email,
-    required this.mobile,
+    required this.inputFields,
     required this.password,
     required this.password2,
   });
 }
+
+class GetSignUpFormEvent extends SignUpEvent {}
