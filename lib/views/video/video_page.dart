@@ -49,22 +49,27 @@ class _VideoPageState extends State<VideoPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    if (BlocProvider.of<LoginBloc>(context).state is LoginSuccessState) {
+      int? memberId;
+      memberId = BlocProvider.of<LoginBloc>(context).state.memberModel!.id;
+      // Create video fetch event
+      context
+          .read<VideoBloc>()
+          .add(FetchVideoEvent(id: widget.id, memberId: memberId));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
+    return BlocBuilder<VideoBloc, VideoState>(
       builder: (context, state) {
-        int? memberId;
-        if (state is LoginSuccessState) {
-          memberId = state.memberModel.id;
-        }
-        // Create video fetch event
-        context
-            .read<VideoBloc>()
-            .add(FetchVideoEvent(id: widget.id, memberId: memberId));
+        VideoModel? parentVideo =
+            state is VideoFetchSuccessState ? state.videoModel : null;
         return Scaffold(
-          appBar: AppAppBar(appBar: AppBar()),
+          appBar: AppAppBar(
+            appBar: AppBar(),
+            parentVideo: parentVideo,
+          ),
           body: _buildBody(),
         );
       },
