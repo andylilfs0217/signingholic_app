@@ -45,16 +45,18 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
       builder: (context, state) {
         if (state is LoginSuccessState) {
           // productCart = state.memberModel.productCart!;
-          videoCart = state.memberModel.videoCart!;
+          videoCart = state.memberModel.videoCart;
           // context
           //     .read<CartBloc>()
           //     .add(GetProductCartDetailsEvent(productCartModel: productCart!));
-          context
-              .read<CartBloc>()
-              .add(GetVideoCartDetailsEvent(videoCartModel: videoCart!));
+          if (videoCart != null) {
+            context
+                .read<CartBloc>()
+                .add(GetVideoCartDetailsEvent(videoCartModel: videoCart!));
+          }
 
           // If the member has logged in, show the shopping cart
-          return videoCart!.items!.isNotEmpty
+          return videoCart?.items!.isNotEmpty ?? false
               ? Column(
                   children: [
                     _buildProducts(),
