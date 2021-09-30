@@ -49,14 +49,14 @@ class _VideoPageState extends State<VideoPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    int? memberId;
     if (BlocProvider.of<LoginBloc>(context).state is LoginSuccessState) {
-      int? memberId;
       memberId = BlocProvider.of<LoginBloc>(context).state.memberModel!.id;
-      // Create video fetch event
-      context
-          .read<VideoBloc>()
-          .add(FetchVideoEvent(id: widget.id, memberId: memberId));
     }
+    // Create video fetch event
+    context
+        .read<VideoBloc>()
+        .add(FetchVideoEvent(id: widget.id, memberId: memberId));
   }
 
   @override
@@ -222,21 +222,24 @@ class _VideoPageState extends State<VideoPage>
       imageUrl: thumbnail,
       placeholder: (context, url) => AppCircularLoading(),
       errorWidget: (context, url, error) => ImageNotFound(),
-      imageBuilder: (context, imageProvider) => Container(
-        height: 250,
-        child: Center(
-            child: Icon(
-          Icons.lock,
-          size: 100,
-          color: Colors.white54,
-        )),
-        decoration: BoxDecoration(
-          color: Colors.grey,
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.cover,
-            colorFilter: new ColorFilter.mode(
-                Colors.black.withOpacity(0.2), BlendMode.dstATop),
+      imageBuilder: (context, imageProvider) => AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Container(
+          width: double.infinity,
+          child: Center(
+              child: Icon(
+            Icons.lock,
+            size: 100,
+            color: Colors.white54,
+          )),
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+              colorFilter: new ColorFilter.mode(
+                  Colors.black.withOpacity(0.2), BlendMode.dstATop),
+            ),
           ),
         ),
       ),
