@@ -1,27 +1,21 @@
-import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/cart/cart_bloc.dart';
-import 'package:singingholic_app/data/bloc/comment/comment_bloc.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
 import 'package:singingholic_app/data/models/video/video_cart_item.dart';
-import 'package:singingholic_app/data/models/video/video_category.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/global/variables.dart';
-import 'package:singingholic_app/routes/app_router.dart';
-import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/views/error/oops_widget.dart';
 import 'package:singingholic_app/views/video/video_discussion.dart';
 import 'package:singingholic_app/views/video/video_player.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
-import 'package:singingholic_app/widgets/app_scaffold.dart';
 import 'package:provider/provider.dart';
 import 'package:singingholic_app/widgets/image_not_found.dart';
 

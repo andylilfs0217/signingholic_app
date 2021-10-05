@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:singingholic_app/data/bloc/comment/comment_bloc.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/data/models/comment/video_comment_model.dart';
@@ -9,7 +8,6 @@ import 'package:singingholic_app/views/video/video_comment.dart';
 import 'package:provider/provider.dart';
 import 'package:singingholic_app/views/video/video_comment_dialog.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
-import 'package:singingholic_app/widgets/app_dialog.dart';
 
 /// Video Description body
 class VideoDiscussion extends StatefulWidget {
@@ -39,6 +37,7 @@ class _VideoDiscussionState extends State<VideoDiscussion>
   }
 
   @override
+  // ignore: must_call_super
   Widget build(BuildContext context) {
     return BlocBuilder<CommentBloc, CommentState>(
       builder: (context, state) {

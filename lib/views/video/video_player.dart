@@ -49,7 +49,6 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
           key: (e) => e.qualityLabel, value: (e) => e.url),
     );
     // Better player general configuration
-    // TODO: Fix the bug that cannot enter full screen
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
       autoPlay: false,

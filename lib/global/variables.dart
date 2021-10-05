@@ -30,4 +30,5 @@ const String LOGO_PATH = 'assets/icons/app_logo.png';
 /// App Parameters
 const String APP_NAME = 'Circle Studio';
 const String APP_TITLE = 'Circle Studio';
+// ignore: non_constant_identifier_names
 String APP_CODE = ENV == EnvironmentStage.staging ? 'demo' : 'vizualize';

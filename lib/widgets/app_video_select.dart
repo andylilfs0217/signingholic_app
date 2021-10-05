@@ -2,6 +2,15 @@ import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:singingholic_app/widgets/app_dialog.dart';
+
+enum UploadStatus {
+  NOT_UPLOADED,
+  COMPRESSING,
+  UPLOADING,
+  UPLOADED,
+}
 
 class AppVideoSelect extends StatefulWidget {
   final VideoModel parentVideo;
@@ -14,6 +23,9 @@ class AppVideoSelect extends StatefulWidget {
 class _AppVideoSelectState extends State<AppVideoSelect> {
   final ImagePicker _picker = ImagePicker();
   XFile? video;
+  UploadStatus _uploadStatus = UploadStatus.NOT_UPLOADED;
+  num _compressPercentage = 0;
+  num _uploadPercentage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +45,7 @@ class _AppVideoSelectState extends State<AppVideoSelect> {
       onTap: () async {
         video = await _picker.pickVideo(source: ImageSource.camera);
         if (video != null) {
+          Navigator.pop(context);
           _showConfirmation(video!);
         }
       },
@@ -64,6 +77,7 @@ class _AppVideoSelectState extends State<AppVideoSelect> {
               children: [
                 _buildVideoPlayer(video: video),
                 _buildAlertText(),
+                _buildProgress(),
               ],
             ),
             actions: <Widget>[
@@ -73,7 +87,9 @@ class _AppVideoSelectState extends State<AppVideoSelect> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context, 'OK');
+                  setState(() {
+                    _uploadStatus = UploadStatus.COMPRESSING;
+                  });
                 },
                 child: const Text('OK'),
               ),
@@ -117,5 +133,51 @@ class _AppVideoSelectState extends State<AppVideoSelect> {
 
   Widget _buildAlertText() {
     return Text('Do you want to upload this video?');
+  }
+
+  Widget _buildProgressBar(num value) {
+    return LinearPercentIndicator(
+      width: 200,
+      animation: true,
+      lineHeight: 20.0,
+      // animationDuration: 2500,
+      percent: 0.8,
+      center: Text("80.0%"),
+      linearStrokeCap: LinearStrokeCap.roundAll,
+      progressColor: Colors.green,
+    );
+  }
+
+  Widget _buildUploadFinishText() {
+    return Text('Uploaded video');
+  }
+
+  Widget _buildUploadingText() {
+    return Text('Uploading video...');
+  }
+
+  Widget _buildCompressingText() {
+    return Text('Compressing video...');
+  }
+
+  Widget _buildProgress() {
+    if (_uploadStatus == UploadStatus.NOT_UPLOADED) {
+      return Container();
+    } else if (_uploadStatus == UploadStatus.COMPRESSING) {
+      return Column(
+        // mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildProgressBar(_compressPercentage),
+          _buildCompressingText()
+        ],
+      );
+    } else if (_uploadStatus == UploadStatus.UPLOADING) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [_buildProgressBar(_uploadPercentage), _buildUploadingText()],
+      );
+    } else {
+      return _buildUploadFinishText();
+    }
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/comment/comment_bloc.dart';
-import 'package:singingholic_app/data/models/comment/comment_model.dart';
 import 'package:singingholic_app/data/models/comment/video_comment_model.dart';
 import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/models/video/video.dart';

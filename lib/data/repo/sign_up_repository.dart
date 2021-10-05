@@ -1,4 +1,3 @@
-import 'package:singingholic_app/providers/login_provider.dart';
 import 'package:singingholic_app/providers/sign_up_provider.dart';
 
 class SignUpRepository {

@@ -1,6 +1,6 @@
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/providers/checkout_provider.dart';
-import 'package:stripe_platform_interface/src/models/payment_intents.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 class CheckoutRepository {
   final CheckoutProvider checkoutProvider;

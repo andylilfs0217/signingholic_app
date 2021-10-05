@@ -29,6 +29,7 @@ class VideoComment extends StatefulWidget {
 
 class _VideoCommentState extends State<VideoComment> {
   /// User's current like status
+  // ignore: unused_field
   LikeStatus _likeStatus = LikeStatus.NONE;
 
   /// The number of replies of the comment

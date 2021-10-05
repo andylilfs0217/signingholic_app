@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:singingholic_app/data/models/comment/comment_model.dart';
 import 'package:singingholic_app/data/models/comment/video_comment_model.dart';
 import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
