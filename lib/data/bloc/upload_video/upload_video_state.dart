@@ -8,3 +8,11 @@ abstract class UploadVideoState extends Equatable {
 }
 
 class UploadVideoInitialState extends UploadVideoState {}
+
+class CompressingVideoState extends UploadVideoState {}
+
+class UploadingVideoState extends UploadVideoState {}
+
+class UploadVideoSuccessState extends UploadVideoState {}
+
+class UploadVideoFailState extends UploadVideoState {}

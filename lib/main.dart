@@ -9,6 +9,7 @@ import 'package:singingholic_app/data/bloc/checkout/checkout_bloc.dart';
 import 'package:singingholic_app/data/bloc/comment/comment_bloc.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
 import 'package:singingholic_app/data/bloc/sign_up/sign_up_bloc.dart';
+import 'package:singingholic_app/data/bloc/upload_video/upload_video_bloc.dart';
 import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/bloc/video_list/video_list_bloc.dart';
 import 'package:singingholic_app/data/repo/cart_repository.dart';
@@ -88,6 +89,8 @@ class SingingholicApp extends StatelessWidget {
             create: (BuildContext context) => SignUpBloc(
                 signUpRepository:
                     SignUpRepository(signUpProvider: SignUpProvider()))),
+        BlocProvider<UploadVideoBloc>(
+            create: (BuildContext context) => UploadVideoBloc()),
       ],
       child: MaterialApp(
         title: APP_NAME,

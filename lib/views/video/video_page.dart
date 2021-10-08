@@ -14,6 +14,7 @@ import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/views/error/oops_widget.dart';
 import 'package:singingholic_app/views/video/video_discussion.dart';
 import 'package:singingholic_app/views/video/video_player.dart';
+import 'package:singingholic_app/views/video/video_submission.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class _VideoPageState extends State<VideoPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     int? memberId;
     if (BlocProvider.of<LoginBloc>(context).state is LoginSuccessState) {
       memberId = BlocProvider.of<LoginBloc>(context).state.memberModel!.id;
@@ -62,7 +63,6 @@ class _VideoPageState extends State<VideoPage>
         return Scaffold(
           appBar: AppAppBar(
             appBar: AppBar(),
-            parentVideo: parentVideo,
           ),
           body: _buildBody(),
         );
@@ -179,6 +179,7 @@ class _VideoPageState extends State<VideoPage>
       tabs: [
         Tab(text: 'Description'),
         Tab(text: 'Discussion'),
+        Tab(text: 'Submission'),
       ],
       labelColor: AppThemeColor.appSecondaryColor,
     );
@@ -189,6 +190,7 @@ class _VideoPageState extends State<VideoPage>
     return TabBarView(controller: _tabController, children: [
       _buildDescription(videoModel: videoModel),
       _buildDiscussion(videoModel: videoModel),
+      _buildSubmission(videoModel: videoModel),
     ]);
   }
 
@@ -207,6 +209,15 @@ class _VideoPageState extends State<VideoPage>
       padding:
           const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
       child: VideoDiscussion(video: videoModel, isPurchased: isPurchased),
+    );
+  }
+
+  /// Create tab view of submission
+  Widget _buildSubmission({required VideoModel videoModel}) {
+    return Padding(
+      padding:
+          const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
+      child: VideoSubmission(video: videoModel, isPurchased: isPurchased),
     );
   }
 
