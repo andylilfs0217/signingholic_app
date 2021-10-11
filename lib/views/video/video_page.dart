@@ -271,7 +271,12 @@ class _VideoPageState extends State<VideoPage>
                         ? () {
                             setState(() {
                               // Put the current video into video cart
-                              var videoCart = state.memberModel.videoCart!;
+                              var videoCart = state.memberModel.videoCart ??
+                                  VideoCartModel(
+                                      itemTotal: 0,
+                                      items: [],
+                                      gifts: [],
+                                      usePoints: 0);
                               var id = videoCart.items?.length ?? 0;
                               var qty = 1;
                               var unit = videoModel?.price ?? 0;
