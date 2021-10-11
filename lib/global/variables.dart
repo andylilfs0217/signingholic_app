@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 /// Environments
 
 /// Environment stages
@@ -16,13 +18,13 @@ const Map<EnvironmentStage, String> ENV_PATHS = {
 
 /// Current environment
 // const ENV = EnvironmentStage.development;
-const ENV = EnvironmentStage.staging;
-// const ENV = EnvironmentStage.production;
+// const ENV = EnvironmentStage.staging;
+const ENV = EnvironmentStage.production;
 
 /// Global variables
 int bottomNavBarIndex = 0;
 bool hideNavBar = false;
-int accountId = ENV == EnvironmentStage.staging ? 52 : 2;
+int accountId = int.parse(dotenv.get('ACCOUNT_ID'));
 
 /// Global paths
 const String LOGO_PATH = 'assets/icons/app_logo.png';

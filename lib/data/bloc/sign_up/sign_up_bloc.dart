@@ -45,7 +45,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         if (response['succeed'] != null && response['succeed']) {
           var payload = response['payload'];
           var account = payload?['account'];
-          var siteConfig = jsonDecode(account?['siteConfig']);
+          var siteConfigString = account?['siteConfig'];
+          var siteConfig =
+              siteConfigString != null ? jsonDecode(siteConfigString) : {};
           yield GetSignUpFormSuccessState(siteConfig: siteConfig);
         } else {
           yield GetSignUpFormFailState();
