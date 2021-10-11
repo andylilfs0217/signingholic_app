@@ -105,25 +105,33 @@ class _SignUpPageState extends State<SignUpPage> {
 
   /// Login form
   Widget _buildForm() {
-    return BlocBuilder<SignUpBloc, SignUpState>(
-      builder: (context, state) {
-        if (state is GettingSignUpFormState) {
-          return AppCircularLoading();
-        } else if (state is GetSignUpFormFailState) {
-          return Text('Sign Up is currently unavailable');
-        } else {
+    return BlocConsumer<SignUpBloc, SignUpState>(
+      listener: (context, state) {
+        if (state is GetSignUpFormSuccessState) {
           var memberForm = state.siteConfig?['memberForm'];
           fields = memberForm?['fields'] ?? [];
           fields = fields
               .where(
                   (field) => field['mode'] != null && field['mode'] != 'fixed')
               .toList();
-          List<Widget> fieldWidgets = [];
           for (var field in fields) {
             TextEditingController controller = new TextEditingController();
-            _fieldControllers.add(controller);
-            fieldWidgets
-                .add(_buildTextFormField(controller: controller, field: field));
+            setState(() {
+              _fieldControllers.add(controller);
+            });
+          }
+        }
+      },
+      builder: (context, state) {
+        if (state is GettingSignUpFormState) {
+          return AppCircularLoading();
+        } else if (state is GetSignUpFormFailState) {
+          return Text('Sign Up is currently unavailable');
+        } else {
+          List<Widget> fieldWidgets = [];
+          for (var i = 0; i < fields.length; i++) {
+            fieldWidgets.add(_buildTextFormField(
+                controller: _fieldControllers[i], field: fields[i]));
           }
           return Form(
             key: _formKey,
