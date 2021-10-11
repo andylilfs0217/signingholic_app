@@ -241,7 +241,8 @@ class _LoginPageState extends State<LoginPage> {
     return TextButton(
         onPressed: () {
           context.read<LoginBloc>().add(LoginSubmittedEvent(
-              email: "a.li@vizualize.net", password: "andyli0217"));
+              email: "a.li@vizualize.net",
+              password: "andyli0217"));
         },
         child: Text('One Tap Login'));
   }

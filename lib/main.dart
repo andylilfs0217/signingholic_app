@@ -18,6 +18,7 @@ import 'package:singingholic_app/data/repo/comment_repository.dart';
 import 'package:singingholic_app/data/repo/login_repository.dart';
 import 'package:singingholic_app/data/repo/sign_up_repository.dart';
 import 'package:singingholic_app/data/repo/video_repository.dart';
+import 'package:singingholic_app/data/repo/video_submission_repository.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/providers/cart_provider.dart';
 import 'package:singingholic_app/providers/checkout_provider.dart';
@@ -25,6 +26,7 @@ import 'package:singingholic_app/providers/comment_provider.dart';
 import 'package:singingholic_app/providers/login_provider.dart';
 import 'package:singingholic_app/providers/sign_up_provider.dart';
 import 'package:singingholic_app/providers/video_provider.dart';
+import 'package:singingholic_app/providers/video_submission_provider.dart';
 import 'package:singingholic_app/routes/app_router.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
@@ -90,7 +92,9 @@ class SingingholicApp extends StatelessWidget {
                 signUpRepository:
                     SignUpRepository(signUpProvider: SignUpProvider()))),
         BlocProvider<UploadVideoBloc>(
-            create: (BuildContext context) => UploadVideoBloc()),
+            create: (BuildContext context) => UploadVideoBloc(
+                videoSubmissionRepository: VideoSubmissionRepository(
+                    videoSubmissionProvider: VideoSubmissionProvider()))),
       ],
       child: MaterialApp(
         title: APP_NAME,

@@ -54,7 +54,9 @@ class _VideoSubmissionState extends State<VideoSubmission>
                     showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
-                          return AppVideoSelect(parentVideo: widget.video);
+                          return AppVideoSelect(
+                              member: state.memberModel,
+                              parentVideo: widget.video);
                         });
                   }
                 : null,

@@ -12,7 +12,11 @@ abstract class UploadVideoEvent extends Equatable {
 }
 
 class UploadVideoToServerEvent extends UploadVideoEvent {
+  final MemberModel member;
+  final VideoModel parentVideo;
   final XFile video;
 
-  const UploadVideoToServerEvent({required this.video}) : super(video: video);
+  const UploadVideoToServerEvent(
+      {required this.video, required this.member, required this.parentVideo})
+      : super(video: video);
 }
