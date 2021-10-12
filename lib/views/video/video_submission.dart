@@ -6,6 +6,9 @@ import 'package:singingholic_app/data/bloc/video_submission/video_submission_blo
 import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
+import 'package:singingholic_app/routes/app_arguments.dart';
+import 'package:singingholic_app/routes/app_router.dart';
+import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
 import 'package:singingholic_app/widgets/app_video_select.dart';
 
@@ -59,7 +62,9 @@ class _VideoSubmissionState extends State<VideoSubmission>
                   mainAxisSize: MainAxisSize.min,
                   children: state.videoSubmissionList
                       .map((e) => _buildSubmissionItem(
-                          member: e.member, path: e.path, time: e.updateTime))
+                          member: e.member,
+                          videoName: e.videoName,
+                          time: e.updateTime))
                       .toList(),
                 );
               } else {
@@ -76,11 +81,13 @@ class _VideoSubmissionState extends State<VideoSubmission>
 
   Widget _buildSubmissionItem(
       {required MemberModel member,
-      required String path,
+      required String videoName,
       required DateTime time}) {
     return InkWell(
       onTap: () {
-        print(path);
+        AppNavigator.goTo(context, AppRoute.VIDEO_SUBMISSION,
+            args:
+                VideoSubmissionArguments(fileName: videoName, member: member));
       },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0),

@@ -5,7 +5,7 @@ class VideoSubmissionModel {
   final int id;
   final MemberModel member;
   final VideoModel parentVideo;
-  final String path;
+  final String videoName;
   final DateTime createTime;
   final DateTime updateTime;
 
@@ -13,7 +13,7 @@ class VideoSubmissionModel {
     required this.id,
     required this.member,
     required this.parentVideo,
-    required this.path,
+    required this.videoName,
     required this.createTime,
     required this.updateTime,
   });
@@ -22,7 +22,7 @@ class VideoSubmissionModel {
       : id = json['id'],
         member = MemberModel.fromJson(json['member']),
         parentVideo = VideoModel.fromJson(json['parentVideo']),
-        path = json['path'],
+        videoName = json['videoName'],
         createTime = DateTime.parse(json['createTime']),
         updateTime = DateTime.parse(json['updateTime']);
 
@@ -30,6 +30,6 @@ class VideoSubmissionModel {
         'id': id,
         'member': member.toJson(),
         'parentVideo': parentVideo.toJson(),
-        'path': path,
+        'videoName': videoName,
       };
 }

@@ -13,7 +13,7 @@ import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/views/error/oops_widget.dart';
 import 'package:singingholic_app/views/video/video_discussion.dart';
-import 'package:singingholic_app/views/video/video_player.dart';
+import 'package:singingholic_app/views/video/video_player_container.dart';
 import 'package:singingholic_app/views/video/video_submission.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
@@ -58,8 +58,6 @@ class _VideoPageState extends State<VideoPage>
   Widget build(BuildContext context) {
     return BlocBuilder<VideoBloc, VideoState>(
       builder: (context, state) {
-        // VideoModel? parentVideo =
-        //     state is VideoFetchSuccessState ? state.videoModel : null;
         return Scaffold(
           appBar: AppAppBar(
             appBar: AppBar(),

@@ -22,4 +22,11 @@ class PathUtils {
     return PathUtils.getApiUri('/site_content/$accountId/site/$imageName')
         .toString();
   }
+
+  static String getVideoSubmissionPath(
+      int accountId, int memberId, String videoName) {
+    return PathUtils.getApiUri(
+            '/site_content/$accountId/video_submission/$memberId/$videoName')
+        .toString();
+  }
 }
