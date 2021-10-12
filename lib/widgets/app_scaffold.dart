@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
-import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/widgets/app_drawer.dart';
 
 /// Base Scaffold of the App
 class AppScaffold extends StatefulWidget {
-  /// Appbar of the scaffold
+  /// App bar of the scaffold
   final PreferredSizeWidget? appBar;
 
   /// Body of the scaffold
@@ -40,12 +39,5 @@ class _AppScaffoldState extends State<AppScaffold> {
       width: MediaQuery.of(context).size.width,
       child: widget.body,
     );
-  }
-
-  /// Action on bottom nav bar click
-  void onClick(int index) {
-    setState(() {
-      bottomNavBarIndex = index;
-    });
   }
 }

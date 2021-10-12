@@ -10,5 +10,7 @@ abstract class VideoEvent extends Equatable {
 }
 
 class FetchVideoEvent extends VideoEvent {
-  FetchVideoEvent({required id}) : super(id: id);
+  /// Member ID
+  final int? memberId;
+  FetchVideoEvent({required id, this.memberId}) : super(id: id);
 }

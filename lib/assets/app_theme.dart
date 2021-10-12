@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 /// Different color of the App
 class AppThemeColor {
   /// Theme color of the app
-  static final Color appPrimaryColor = Colors.orange;
+  static final ColorSwatch appPrimaryColor = Colors.orange;
 
   /// Secondary theme color of the app
-  static final Color appSecondaryColor = Colors.blue;
+  static final Color appSecondaryColor = Colors.black;
 
   /// Search bar color of the app
   static final Color? searchBarColor = Colors.grey[300];
@@ -30,39 +30,27 @@ class AppThemeSize {
   static const appDrawerListTileVerticalPaddingSize = 20.0;
 
   /// Padding widget of the entire screen (left, top, bottom)
-  static final screenPadding = EdgeInsets.fromLTRB(
-      screenPaddingSize, screenPaddingSize, screenPaddingSize, 0);
+  static final screenPadding =
+      EdgeInsets.fromLTRB(screenPaddingSize, 0, screenPaddingSize, 0);
 
   /// Padding widget of the drawer items
   static final appDrawerListTilePadding = EdgeInsets.symmetric(
       horizontal: appDrawerListTileHorizontalPaddingSize,
       vertical: appDrawerListTileVerticalPaddingSize);
 
-  /// Card border radius
-  static const cardBorderRadius = 8.0;
-
-  /// Tag Chip border raduius
-  static const tagChipBorderRadius = 10.0;
+  /// App border radius
+  static const appBorderRadius = 5.0;
 }
 
 /// App default theme data
 final ThemeData appThemeData = ThemeData(
-  brightness: Brightness.light,
-  primaryColor: AppThemeColor.appPrimaryColor,
-  accentColor: AppThemeColor.appSecondaryColor,
-  visualDensity: VisualDensity.adaptivePlatformDensity,
-  cardTheme: CardTheme(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-              Radius.circular(AppThemeSize.cardBorderRadius)))),
-  textTheme: TextTheme(),
-  // chipTheme: ChipThemeData(
-  //     backgroundColor: null,
-  //     brightness: null,
-  //     disabledColor: null,
-  //     labelStyle: null,
-  //     padding: null,
-  //     secondaryLabelStyle: null,
-  //     secondarySelectedColor: null,
-  //     selectedColor: null),
-);
+    brightness: Brightness.light,
+    colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.orange)
+        .copyWith(secondary: AppThemeColor.appSecondaryColor),
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    cardTheme: CardTheme(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+                Radius.circular(AppThemeSize.appBorderRadius)))),
+    appBarTheme: AppBarTheme(
+        titleTextStyle: TextStyle(fontSize: 18, color: Colors.black)));

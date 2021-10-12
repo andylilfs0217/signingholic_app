@@ -9,9 +9,9 @@ class VideoModel {
   final String? nameLang;
   final String? description;
   final String? descriptionLang;
-  final int? price;
-  final int? discount;
-  final int? discountPc;
+  final num? price;
+  final num? discount;
+  final num? discountPc;
   final String? youTubeId;
   final String? youTubePublishedAt;
   final List? tags;
@@ -21,8 +21,8 @@ class VideoModel {
   final String? updateTime;
   final List? categories;
 
-  VideoModel(
-    this.id,
+  VideoModel({
+    required this.id,
     this.free,
     this.status,
     this.name,
@@ -41,7 +41,7 @@ class VideoModel {
     this.featured,
     this.descriptionLang,
     this.categories,
-  );
+  });
 
   VideoModel.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -67,24 +67,24 @@ class VideoModel {
             .toList();
 
   Map<String, dynamic> toJson() => {
-        'id': this.id,
-        'free': this.free,
-        'status': this.status,
-        'featured': this.featured,
-        'name': this.name,
-        'name_lang': this.nameLang,
-        'description': this.description,
-        'description_lang': this.descriptionLang,
-        'price': this.price,
-        'discount': this.discount,
-        'discountPc': this.discountPc,
-        'youTubeId': this.youTubeId,
-        'youTubePublishedAt': this.youTubePublishedAt,
-        'tags': this.tags,
-        'imageIds': this.imageIds,
-        'imagePaths': this.imagePaths,
-        'createTime': this.createTime,
-        'updateTime': this.updateTime,
-        'categories': this.categories?.map((e) => e.toJson()).toList(),
+        'id': id,
+        'free': free,
+        'status': status,
+        'featured': featured,
+        'name': name,
+        'name_lang': nameLang,
+        'description': description,
+        'description_lang': descriptionLang,
+        'price': price,
+        'discount': discount,
+        'discountPc': discountPc,
+        'youTubeId': youTubeId,
+        'youTubePublishedAt': youTubePublishedAt,
+        'tags': tags,
+        'imageIds': imageIds,
+        'imagePaths': imagePaths,
+        'createTime': createTime,
+        'updateTime': updateTime,
+        'categories': categories?.map((e) => e.toJson()).toList(),
       };
 }

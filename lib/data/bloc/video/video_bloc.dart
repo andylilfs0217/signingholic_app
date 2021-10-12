@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
+import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/data/repo/video_repository.dart';
 
 part 'video_event.dart';
@@ -21,9 +22,12 @@ class VideoBloc extends Bloc<VideoEvent, VideoState> {
     if (event is FetchVideoEvent) {
       try {
         yield VideoInitialState();
-        // TODO: fetch video
         VideoModel videoModel = await videoRepository.fetchVideo(id: event.id);
-        yield VideoFetchSuccessState(videoModel);
+        List<VideoFormatModel>? videoFormats = await videoRepository
+            .fetchVideoFormats(id: event.id, memberId: event.memberId);
+        // Obtain the correct url
+        // String url = videoFormats
+        yield VideoFetchSuccessState(videoModel, videoFormats);
       } catch (e) {
         yield VideoFetchFailState();
         throw Exception(e);
