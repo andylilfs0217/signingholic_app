@@ -1,11 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:singingholic_app/data/bloc/upload_video/upload_video_bloc.dart';
+import 'package:singingholic_app/data/bloc/video_submission/video_submission_bloc.dart';
+import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
+import 'package:singingholic_app/widgets/app_circular_loading.dart';
 import 'package:singingholic_app/widgets/app_video_select.dart';
-import 'package:video_compress/video_compress.dart';
 
 class VideoSubmission extends StatefulWidget {
   final VideoModel video;
@@ -33,7 +35,7 @@ class _VideoSubmissionState extends State<VideoSubmission>
               state is UploadVideoInitialState
                   ? _buildSubmitButton()
                   : _buildSubmitProgress(),
-              true ? _buildNoSubmissionHint() : _buildSubmissionList(),
+              _buildSubmissionList(),
             ],
           ),
         );
@@ -42,7 +44,58 @@ class _VideoSubmissionState extends State<VideoSubmission>
   }
 
   Widget _buildSubmissionList() {
-    return Column();
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        if (state is LoginSuccessState) {
+          MemberModel member = state.memberModel;
+          context.read<VideoSubmissionBloc>().add(GetVideoSubmissionListEvent(
+              member: member, parentVideo: widget.video));
+          return BlocBuilder<VideoSubmissionBloc, VideoSubmissionState>(
+            builder: (context, state) {
+              if (state is GettingVideoSubmissionState)
+                return AppCircularLoading();
+              else if (state.videoSubmissionList.isNotEmpty) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: state.videoSubmissionList
+                      .map((e) => _buildSubmissionItem(
+                          member: e.member, path: e.path, time: e.updateTime))
+                      .toList(),
+                );
+              } else {
+                return _buildNoSubmissionHint();
+              }
+            },
+          );
+        } else {
+          return _buildNoSubmissionHint();
+        }
+      },
+    );
+  }
+
+  Widget _buildSubmissionItem(
+      {required MemberModel member,
+      required String path,
+      required DateTime time}) {
+    return InkWell(
+      onTap: () {
+        print(path);
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Member name
+            Text(member.name ?? 'Submission'),
+            // Submission Date
+            Text(DateFormat('yyyy-MM-dd kk:mm').format(time)),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildSubmitButton() {

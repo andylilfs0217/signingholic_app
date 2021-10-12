@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -7,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/data/repo/video_submission_repository.dart';
-import 'package:video_compress/video_compress.dart';
 
 part 'upload_video_event.dart';
 part 'upload_video_state.dart';

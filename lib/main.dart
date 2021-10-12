@@ -12,6 +12,7 @@ import 'package:singingholic_app/data/bloc/sign_up/sign_up_bloc.dart';
 import 'package:singingholic_app/data/bloc/upload_video/upload_video_bloc.dart';
 import 'package:singingholic_app/data/bloc/video/video_bloc.dart';
 import 'package:singingholic_app/data/bloc/video_list/video_list_bloc.dart';
+import 'package:singingholic_app/data/bloc/video_submission/video_submission_bloc.dart';
 import 'package:singingholic_app/data/repo/cart_repository.dart';
 import 'package:singingholic_app/data/repo/checkout_repository.dart';
 import 'package:singingholic_app/data/repo/comment_repository.dart';
@@ -93,6 +94,10 @@ class SingingholicApp extends StatelessWidget {
                     SignUpRepository(signUpProvider: SignUpProvider()))),
         BlocProvider<UploadVideoBloc>(
             create: (BuildContext context) => UploadVideoBloc(
+                videoSubmissionRepository: VideoSubmissionRepository(
+                    videoSubmissionProvider: VideoSubmissionProvider()))),
+        BlocProvider<VideoSubmissionBloc>(
+            create: (BuildContext context) => VideoSubmissionBloc(
                 videoSubmissionRepository: VideoSubmissionRepository(
                     videoSubmissionProvider: VideoSubmissionProvider()))),
       ],

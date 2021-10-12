@@ -114,7 +114,7 @@ class _SignUpPageState extends State<SignUpPage> {
               .where(
                   (field) => field['mode'] != null && field['mode'] != 'fixed')
               .toList();
-          for (var field in fields) {
+          for (var _ in fields) {
             TextEditingController controller = new TextEditingController();
             setState(() {
               _fieldControllers.add(controller);

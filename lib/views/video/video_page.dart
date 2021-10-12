@@ -58,8 +58,8 @@ class _VideoPageState extends State<VideoPage>
   Widget build(BuildContext context) {
     return BlocBuilder<VideoBloc, VideoState>(
       builder: (context, state) {
-        VideoModel? parentVideo =
-            state is VideoFetchSuccessState ? state.videoModel : null;
+        // VideoModel? parentVideo =
+        //     state is VideoFetchSuccessState ? state.videoModel : null;
         return Scaffold(
           appBar: AppAppBar(
             appBar: AppBar(),

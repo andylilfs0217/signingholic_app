@@ -2,10 +2,8 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
-import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/routes/app_router.dart';
 import 'package:singingholic_app/utils/app_navigator.dart';
-import 'package:singingholic_app/widgets/app_video_select.dart';
 
 /// Base AppBar of the App
 class AppAppBar extends StatefulWidget implements PreferredSizeWidget {
