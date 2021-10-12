@@ -81,10 +81,8 @@ class VideoProvider {
       List<VideoFormatModel> result = [];
       if (responseBody is List) {
         result = responseBody.map((e) => VideoFormatModel.fromJson(e)).toList();
-      } else if (responseBody['locked'] != null && responseBody['locked']) {
+      } else
         return result;
-      }
-      return result;
     } catch (e) {
       throw Exception(e);
     }
