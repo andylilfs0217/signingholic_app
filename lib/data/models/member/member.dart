@@ -93,7 +93,9 @@ class MemberModel {
         videoCartSent = json['videoCartSent'],
         resetDate = json['resetDate'],
         resetToken = json['resetToken'],
-        tier = MemberTierModel.fromJson(json['tier']);
+        tier = json['tier'] != null
+            ? MemberTierModel.fromJson(json['tier'])
+            : null;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

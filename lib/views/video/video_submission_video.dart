@@ -2,15 +2,20 @@ import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:singingholic_app/data/models/member/member.dart';
+import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 
 class VideoSubmissionVideoPage extends StatefulWidget {
   final String fileName;
   final MemberModel member;
-  const VideoSubmissionVideoPage(
-      {Key? key, required this.member, required this.fileName})
-      : super(key: key);
+  final VideoModel parentVideo;
+  const VideoSubmissionVideoPage({
+    Key? key,
+    required this.member,
+    required this.fileName,
+    required this.parentVideo,
+  }) : super(key: key);
 
   @override
   _VideoSubmissionVideoPageState createState() =>
@@ -59,6 +64,7 @@ class _VideoSubmissionVideoPageState extends State<VideoSubmissionVideoPage> {
     String path = PathUtils.getVideoSubmissionPath(
       int.parse(dotenv.get('ACCOUNT_ID')),
       widget.member.id,
+      widget.parentVideo.id,
       widget.fileName,
     );
     // Better player data source configuration

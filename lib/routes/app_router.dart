@@ -73,7 +73,9 @@ class AppRouteGenerator {
         final args = settings.arguments as VideoSubmissionArguments;
         return MaterialPageRoute(
             builder: (_) => VideoSubmissionVideoPage(
-                fileName: args.fileName, member: args.member));
+                fileName: args.fileName,
+                member: args.member,
+                parentVideo: args.parentVideo));
       default:
         return MaterialPageRoute(builder: (_) => PageNotFoundPage());
     }

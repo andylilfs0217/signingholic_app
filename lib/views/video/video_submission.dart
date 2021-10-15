@@ -86,8 +86,10 @@ class _VideoSubmissionState extends State<VideoSubmission>
     return InkWell(
       onTap: () {
         AppNavigator.goTo(context, AppRoute.VIDEO_SUBMISSION,
-            args:
-                VideoSubmissionArguments(fileName: videoName, member: member));
+            args: VideoSubmissionArguments(
+                fileName: videoName,
+                member: member,
+                parentVideo: widget.video));
       },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0),

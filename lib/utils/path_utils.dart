@@ -24,9 +24,9 @@ class PathUtils {
   }
 
   static String getVideoSubmissionPath(
-      int accountId, int memberId, String videoName) {
+      int accountId, int memberId, int videoId, String videoName) {
     return PathUtils.getApiUri(
-            '/site_content/$accountId/video_submission/$memberId/$videoName')
+            '/site_content/$accountId/video_submission/$memberId/$videoId/$videoName')
         .toString();
   }
 }
