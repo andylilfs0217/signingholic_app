@@ -133,10 +133,11 @@ class _AppDrawerState extends State<AppDrawer> {
                       text: state.memberModel.name ?? '', // Member name
                       style: DefaultTextStyle.of(context).style,
                       children: [
-                        if (state.memberModel.tier != null)
+                        if (state.memberModel.tier != null &&
+                            state.memberModel.tier!.name != null)
                           TextSpan(
                               text:
-                                  ' (${state.memberModel.tier.toString()})') // Member tier
+                                  ' (${state.memberModel.tier!.name!})') // Member tier
                       ],
                     )),
                   ),

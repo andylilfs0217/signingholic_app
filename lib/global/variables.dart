@@ -16,6 +16,13 @@ const Map<EnvironmentStage, String> ENV_PATHS = {
   EnvironmentStage.production: 'env/production.env',
 };
 
+/// Environment names
+const Map<EnvironmentStage, String> ENV_NAMES = {
+  EnvironmentStage.development: 'Development',
+  EnvironmentStage.staging: 'Staging',
+  EnvironmentStage.production: 'Production',
+};
+
 /// Current environment
 const ENV = EnvironmentStage.development;
 // const ENV = EnvironmentStage.staging;

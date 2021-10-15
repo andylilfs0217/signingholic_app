@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:singingholic_app/data/models/member/member_tier.dart';
 import 'package:singingholic_app/data/models/product/product_cart.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
 
@@ -30,7 +31,7 @@ class MemberModel {
   bool? videoCartSent;
   String? resetDate;
   String? resetToken;
-  Object? tier;
+  MemberTierModel? tier;
 
   MemberModel(
       {required this.id,
@@ -62,7 +63,7 @@ class MemberModel {
       this.tier});
 
   MemberModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json['id'] is int ? json['id'] : int.parse(json['id']),
         active = json['active'],
         name = json['name'],
         email = json['email'],
@@ -92,7 +93,7 @@ class MemberModel {
         videoCartSent = json['videoCartSent'],
         resetDate = json['resetDate'],
         resetToken = json['resetToken'],
-        tier = json['tier'];
+        tier = MemberTierModel.fromJson(json['tier']);
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -124,7 +125,7 @@ class MemberModel {
     data['videoCartSent'] = this.videoCartSent;
     data['resetDate'] = this.resetDate;
     data['resetToken'] = this.resetToken;
-    data['tier'] = this.tier;
+    data['tier'] = this.tier != null ? this.tier!.toJson() : null;
     return data;
   }
 }

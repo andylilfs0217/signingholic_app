@@ -27,8 +27,11 @@ class VideoSubmissionProvider {
         '/public/ec/video-submission',
         data: formData,
       );
-      VideoSubmissionModel result =
-          VideoSubmissionModel.fromJson(jsonDecode(response.data));
+      final responseData = response.data;
+      if (!responseData['succeed'])
+        throw Exception('Upload video submission failed');
+      final payload = responseData['payload'];
+      VideoSubmissionModel result = VideoSubmissionModel.fromJson(payload);
       return result;
     } catch (e) {
       throw Exception(e);

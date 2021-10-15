@@ -44,7 +44,7 @@ class VideoModel {
   });
 
   VideoModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json['id'] is int ? json['id'] : int.parse(json['id']),
         free = json['free'],
         status = json['status'],
         featured = json['featured'],

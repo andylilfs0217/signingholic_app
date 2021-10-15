@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,6 +42,7 @@ void main() async {
   /// Initialize dotenv
   await dotenv.load(
       fileName: ENV_PATHS[ENV] ?? ENV_PATHS[EnvironmentStage.development]!);
+  log('This app is started in ${ENV_NAMES[ENV]} mode.');
 
   /// Initialize Bloc observer
   Bloc.observer = BlocObserver();
