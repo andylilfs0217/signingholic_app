@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/cart/cart_bloc.dart';
 import 'package:singingholic_app/data/bloc/checkout/checkout_bloc.dart';
@@ -18,7 +15,6 @@ import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
-import 'package:http/http.dart' as http;
 import 'package:singingholic_app/widgets/app_dialog.dart';
 
 class CheckoutPage extends StatefulWidget {

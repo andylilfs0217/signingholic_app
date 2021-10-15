@@ -16,10 +16,17 @@ const Map<EnvironmentStage, String> ENV_PATHS = {
   EnvironmentStage.production: 'env/production.env',
 };
 
+/// Environment names
+const Map<EnvironmentStage, String> ENV_NAMES = {
+  EnvironmentStage.development: 'Development',
+  EnvironmentStage.staging: 'Staging',
+  EnvironmentStage.production: 'Production',
+};
+
 /// Current environment
-// const ENV = EnvironmentStage.development;
+const ENV = EnvironmentStage.development;
 // const ENV = EnvironmentStage.staging;
-const ENV = EnvironmentStage.production;
+// const ENV = EnvironmentStage.production;
 
 /// Global variables
 int bottomNavBarIndex = 0;
@@ -32,4 +39,5 @@ const String LOGO_PATH = 'assets/icons/app_logo.png';
 /// App Parameters
 const String APP_NAME = 'Circle Studio';
 const String APP_TITLE = 'Circle Studio';
+// ignore: non_constant_identifier_names
 String APP_CODE = ENV == EnvironmentStage.staging ? 'demo' : 'vizualize';

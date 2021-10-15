@@ -1,11 +1,17 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
+import 'package:singingholic_app/data/bloc/upload_video/upload_video_bloc.dart';
+import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/models/video/video.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AppVideoSelect extends StatefulWidget {
   final VideoModel parentVideo;
-  const AppVideoSelect({Key? key, required this.parentVideo}) : super(key: key);
+  final MemberModel member;
+  const AppVideoSelect(
+      {Key? key, required this.member, required this.parentVideo})
+      : super(key: key);
 
   @override
   State<AppVideoSelect> createState() => _AppVideoSelectState();
@@ -33,6 +39,7 @@ class _AppVideoSelectState extends State<AppVideoSelect> {
       onTap: () async {
         video = await _picker.pickVideo(source: ImageSource.camera);
         if (video != null) {
+          Navigator.pop(context);
           _showConfirmation(video!);
         }
       },
@@ -73,7 +80,12 @@ class _AppVideoSelectState extends State<AppVideoSelect> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context, 'OK');
+                  context.read<UploadVideoBloc>().add(UploadVideoToServerEvent(
+                      member: widget.member,
+                      parentVideo: widget.parentVideo,
+                      video: video));
+                  Navigator.pop(context, 'Upload');
+                  Navigator.pop(context);
                 },
                 child: const Text('OK'),
               ),

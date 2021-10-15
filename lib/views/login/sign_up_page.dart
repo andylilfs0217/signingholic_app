@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/sign_up/sign_up_bloc.dart';
 import 'package:singingholic_app/global/variables.dart';
@@ -9,7 +8,6 @@ import 'package:singingholic_app/routes/app_router.dart';
 import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
-import 'package:singingholic_app/widgets/app_dialog.dart';
 import 'package:singingholic_app/widgets/app_scaffold.dart';
 import 'package:validators/validators.dart';
 
@@ -116,7 +114,7 @@ class _SignUpPageState extends State<SignUpPage> {
               .where(
                   (field) => field['mode'] != null && field['mode'] != 'fixed')
               .toList();
-          for (var field in fields) {
+          for (var _ in fields) {
             TextEditingController controller = new TextEditingController();
             setState(() {
               _fieldControllers.add(controller);

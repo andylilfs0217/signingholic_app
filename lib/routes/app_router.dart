@@ -13,6 +13,7 @@ import 'package:singingholic_app/views/shopping_cart/shopping_cart_page.dart';
 import 'package:singingholic_app/views/upload/upload_page.dart';
 import 'package:singingholic_app/views/video/video_list_page.dart';
 import 'package:singingholic_app/views/video/video_page.dart';
+import 'package:singingholic_app/views/video/video_submission_video.dart';
 
 class AppRoute {
   static const INIT = '/';
@@ -27,6 +28,7 @@ class AppRoute {
   static const CONTACT_US = '/contact-us';
   static const PAYMENT = '/payment';
   static const SIGN_UP = '/sign-up';
+  static const VIDEO_SUBMISSION = '/video-submission';
 }
 
 class AppRouteGenerator {
@@ -67,6 +69,11 @@ class AppRouteGenerator {
         return MaterialPageRoute(
             builder: (_) =>
                 SignUpPage(email: args.email, password: args.password));
+      case AppRoute.VIDEO_SUBMISSION:
+        final args = settings.arguments as VideoSubmissionArguments;
+        return MaterialPageRoute(
+            builder: (_) => VideoSubmissionVideoPage(
+                fileName: args.fileName, member: args.member));
       default:
         return MaterialPageRoute(builder: (_) => PageNotFoundPage());
     }

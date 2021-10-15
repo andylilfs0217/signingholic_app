@@ -1,3 +1,4 @@
+import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
 import 'package:singingholic_app/data/models/video/video_item.dart';
 
@@ -27,4 +28,13 @@ class SignUpArguments {
   final String? password;
 
   SignUpArguments({this.email, this.password});
+}
+
+// Arguments which will be passed to Video Submission Video Page
+class VideoSubmissionArguments {
+  final String fileName;
+  final MemberModel member;
+
+  const VideoSubmissionArguments(
+      {required this.fileName, required this.member});
 }

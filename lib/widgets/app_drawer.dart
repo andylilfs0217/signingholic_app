@@ -63,25 +63,6 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 
-  /// Create Search bar
-  // TODO: Remove this old code
-  // Widget _buildSearchBar() {
-  //   return Padding(
-  //     padding: AppThemeSize.appDrawerListTilePadding,
-  //     child: TextField(
-  //       obscureText: true,
-  //       decoration: InputDecoration(
-  //         filled: true,
-  //         fillColor: AppThemeColor.searchBarColor,
-  //         border: OutlineInputBorder(borderSide: BorderSide.none),
-  //         labelText: 'Search',
-  //         prefixIcon: Icon(Icons.search),
-  //         contentPadding: EdgeInsets.symmetric(vertical: 10.0),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   /// Create Home Tile
   Widget _buildHomeTile() {
     return AppDrawerListTile(
@@ -152,10 +133,11 @@ class _AppDrawerState extends State<AppDrawer> {
                       text: state.memberModel.name ?? '', // Member name
                       style: DefaultTextStyle.of(context).style,
                       children: [
-                        if (state.memberModel.tier != null)
+                        if (state.memberModel.tier != null &&
+                            state.memberModel.tier!.name != null)
                           TextSpan(
                               text:
-                                  ' (${state.memberModel.tier.toString()})') // Member tier
+                                  ' (${state.memberModel.tier!.name!})') // Member tier
                       ],
                     )),
                   ),
