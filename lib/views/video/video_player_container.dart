@@ -44,9 +44,9 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
     // Better player data source configuration
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
-      widget.videoFormats.last.url,
+      widget.videoFormats.last.url ?? '',
       resolutions: Map.fromIterable(widget.videoFormats,
-          key: (e) => e.qualityLabel, value: (e) => e.url),
+          key: (e) => e.qualityLabel, value: (e) => e.url ?? ''),
     );
     // Better player general configuration
     BetterPlayerConfiguration betterPlayerConfiguration =

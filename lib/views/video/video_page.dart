@@ -92,7 +92,11 @@ class _VideoPageState extends State<VideoPage>
               _buildTabBar(),
               Expanded(child: _buildTabBarView(videoModel: state.videoModel)),
               if (state.videoFormatModel == null ||
-                  state.videoFormatModel!.length == 0)
+                  state.videoFormatModel!.length == 0 ||
+                  state.videoFormatModel!
+                          .where((element) => element.url == null)
+                          .length >
+                      0)
                 _buildButtonBar(videoModel: state.videoModel),
             ],
           );
@@ -108,7 +112,9 @@ class _VideoPageState extends State<VideoPage>
   /// Create video player
   Widget _buildVideoPlayer(
       {List<VideoFormatModel>? videoFormats, required VideoModel videoModel}) {
-    if (videoFormats == null || videoFormats.length == 0) {
+    if (videoFormats == null ||
+        videoFormats.length == 0 ||
+        videoFormats.where((element) => element.url == null).length > 0) {
       return _buildVideoLocked(
           thumbnail: PathUtils.getImagePathWithId(
               accountId, 'video', videoModel.id, videoModel.imagePaths?[0]));
@@ -155,7 +161,9 @@ class _VideoPageState extends State<VideoPage>
   Widget _buildStatus({required VideoModel videoModel}) {
     String status = '';
     // TODO: check if the video is purchased
-    if (videoModel.free ?? false) {
+    if (videoModel.free != null &&
+        videoModel.free! &&
+        (videoModel.price == null || videoModel.price! == 0)) {
       status = 'Free';
     } else if (videoModel.price != null) {
       status = '\$${videoModel.price}';

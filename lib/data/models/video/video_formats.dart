@@ -14,7 +14,7 @@ class VideoFormatModel {
   final String? projectionType;
   final String? quality;
   final String? qualityLabel;
-  final String url;
+  final String? url;
   final int? width;
 
   VideoFormatModel({
@@ -33,7 +33,7 @@ class VideoFormatModel {
     this.projectionType,
     this.quality,
     this.qualityLabel,
-    required this.url,
+    this.url,
     this.width,
   });
 
