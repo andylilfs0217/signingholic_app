@@ -42,3 +42,6 @@ app.*.map.json
 
 # Environment file
 *.env
+
+# Password file
+scp_password.txt
