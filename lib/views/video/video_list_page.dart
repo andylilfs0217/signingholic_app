@@ -87,7 +87,7 @@ class _VideoListPageState extends State<VideoListPage> {
           // Add a price if the video is not free
           List tags = e.tags ?? [];
           String? subtitle;
-          if (e.free != null && e.free! && (e.price == null || e.price! == 0)) {
+          if (e.free != null && e.free!) {
             if (!tags.contains('FREE')) {
               tags.add('FREE');
             }

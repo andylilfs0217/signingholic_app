@@ -161,9 +161,7 @@ class _VideoPageState extends State<VideoPage>
   Widget _buildStatus({required VideoModel videoModel}) {
     String status = '';
     // TODO: check if the video is purchased
-    if (videoModel.free != null &&
-        videoModel.free! &&
-        (videoModel.price == null || videoModel.price! == 0)) {
+    if (videoModel.free != null && videoModel.free!) {
       status = 'Free';
     } else if (videoModel.price != null) {
       status = '\$${videoModel.price}';
