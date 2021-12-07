@@ -19,6 +19,7 @@ import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:singingholic_app/widgets/image_not_found.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 /// Video page
 class VideoPage extends StatefulWidget {
@@ -56,16 +57,7 @@ class _VideoPageState extends State<VideoPage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VideoBloc, VideoState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppAppBar(
-            appBar: AppBar(),
-          ),
-          body: _buildBody(),
-        );
-      },
-    );
+    return _buildBody();
   }
 
   bool isVideoFree(VideoModel videoModel) {
@@ -84,31 +76,58 @@ class _VideoPageState extends State<VideoPage>
       builder: (context, state) {
         if (state is VideoInitialState) {
           // If getting video
-          return Center(child: AppCircularLoading());
+          return Scaffold(
+              appBar: AppAppBar(
+                appBar: AppBar(),
+              ),
+              body: Center(child: AppCircularLoading()));
         } else if (state is VideoFetchSuccessState) {
-          // If get video success
-          isPurchased = state.videoFormatModel != null &&
-              state.videoFormatModel!.length > 0;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              _buildVideoPlayer(
-                  videoModel: state.videoModel,
-                  videoFormats: state.videoFormatModel),
-              _buildCategory(categories: state.videoModel.categories),
-              _buildTitle(title: state.videoModel.name),
-              _buildStatus(videoModel: state.videoModel),
-              _buildTabBar(),
-              Expanded(child: _buildTabBarView(videoModel: state.videoModel)),
-              if (!isVideoPurchased(state.videoModel, state.videoFormatModel))
-                _buildButtonBar(videoModel: state.videoModel),
-            ],
-          );
+          var _controller = YoutubePlayerController(
+              initialVideoId: state.videoModel.youTubeId!,
+              flags: YoutubePlayerFlags(
+                autoPlay: true,
+              ));
+          return YoutubePlayerBuilder(
+              player: YoutubePlayer(
+                controller: _controller,
+                showVideoProgressIndicator: true,
+              ),
+              builder: (context, player) {
+                return Scaffold(
+                  appBar: AppAppBar(
+                    appBar: AppBar(),
+                  ),
+                  body: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      _buildVideoPlayer(
+                          videoModel: state.videoModel,
+                          videoFormats: state.videoFormatModel,
+                          player: player),
+                      _buildCategory(categories: state.videoModel.categories),
+                      _buildTitle(title: state.videoModel.name),
+                      _buildStatus(videoModel: state.videoModel),
+                      _buildTabBar(),
+                      Expanded(
+                          child:
+                              _buildTabBarView(videoModel: state.videoModel)),
+                      if (!isVideoPurchased(
+                          state.videoModel, state.videoFormatModel))
+                        _buildButtonBar(videoModel: state.videoModel),
+                    ],
+                  ),
+                );
+              });
         } else {
           // If there is an error when getting the video
-          return OopsWidget(
-              message: 'Seems like the video is playing hide and seek.');
+          return Scaffold(
+            appBar: AppAppBar(
+              appBar: AppBar(),
+            ),
+            body: OopsWidget(
+                message: 'Seems like the video is playing hide and seek.'),
+          );
         }
       },
     );
@@ -116,11 +135,11 @@ class _VideoPageState extends State<VideoPage>
 
   /// Create video player
   Widget _buildVideoPlayer(
-      {List<VideoFormatModel>? videoFormats, required VideoModel videoModel}) {
+      {List<VideoFormatModel>? videoFormats,
+      required VideoModel videoModel,
+      required Widget player}) {
     if (isVideoPurchased(videoModel, videoFormats)) {
-      return VideoPlayerContainer(
-        videoModel: videoModel,
-      );
+      return player;
     } else {
       return _buildVideoLocked(
           thumbnail: PathUtils.getImagePathWithId(
