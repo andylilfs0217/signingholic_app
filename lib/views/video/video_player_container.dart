@@ -1,12 +1,12 @@
-import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:singingholic_app/data/models/video/video_formats.dart';
+import 'package:singingholic_app/data/models/video/video.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 /// Build video playback area widget
 class VideoPlayerContainer extends StatefulWidget {
-  final List<VideoFormatModel> videoFormats;
+  final VideoModel videoModel;
 
-  const VideoPlayerContainer({Key? key, required this.videoFormats})
+  const VideoPlayerContainer({Key? key, required this.videoModel})
       : super(key: key);
 
   @override
@@ -15,13 +15,16 @@ class VideoPlayerContainer extends StatefulWidget {
 
 class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
   // Variables
-  late BetterPlayerController _betterPlayerController;
-  GlobalKey _betterPlayerKey = GlobalKey();
+  late YoutubePlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-    this.initializePlayer();
+    _controller = YoutubePlayerController(
+        initialVideoId: widget.videoModel.youTubeId!,
+        flags: YoutubePlayerFlags(
+          autoPlay: true,
+        ));
   }
 
   @override
@@ -31,39 +34,15 @@ class _VideoPlayerContainerState extends State<VideoPlayerContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: BetterPlayer(
-        controller: _betterPlayerController,
-        key: _betterPlayerKey,
-      ),
-    );
-  }
-
-  void initializePlayer() {
-    // Better player data source configuration
-    BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      widget.videoFormats.last.url ?? '',
-      resolutions: Map.fromIterable(widget.videoFormats,
-          key: (e) => e.qualityLabel, value: (e) => e.url ?? ''),
-    );
-    // Better player general configuration
-    BetterPlayerConfiguration betterPlayerConfiguration =
-        BetterPlayerConfiguration(
-      autoPlay: false,
-      looping: false,
-      fullScreenByDefault: false,
-      fit: BoxFit.contain,
-      autoDispose: false,
-      allowedScreenSleep: false,
-      autoDetectFullscreenDeviceOrientation: true,
-    );
-    // Initialize Better player controller
-    _betterPlayerController = BetterPlayerController(
-      betterPlayerConfiguration,
-      betterPlayerDataSource: betterPlayerDataSource,
-    );
-    _betterPlayerController.enablePictureInPicture(_betterPlayerKey);
+    return YoutubePlayerBuilder(
+        player: YoutubePlayer(
+          controller: _controller,
+          showVideoProgressIndicator: true,
+        ),
+        builder: (context, player) {
+          return Column(
+            children: [player],
+          );
+        });
   }
 }

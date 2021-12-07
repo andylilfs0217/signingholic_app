@@ -68,6 +68,16 @@ class _VideoPageState extends State<VideoPage>
     );
   }
 
+  bool isVideoFree(VideoModel videoModel) {
+    return videoModel.free != null && videoModel.free!;
+  }
+
+  bool isVideoPurchased(
+      VideoModel videoModel, List<VideoFormatModel>? videoFormats) {
+    return isVideoFree(videoModel) ||
+        (videoFormats != null && videoFormats.length > 0);
+  }
+
   /// Create page body
   Widget _buildBody() {
     return BlocBuilder<VideoBloc, VideoState>(
@@ -91,12 +101,7 @@ class _VideoPageState extends State<VideoPage>
               _buildStatus(videoModel: state.videoModel),
               _buildTabBar(),
               Expanded(child: _buildTabBarView(videoModel: state.videoModel)),
-              if (state.videoFormatModel == null ||
-                  state.videoFormatModel!.length == 0 ||
-                  state.videoFormatModel!
-                          .where((element) => element.url == null)
-                          .length >
-                      0)
+              if (!isVideoPurchased(state.videoModel, state.videoFormatModel))
                 _buildButtonBar(videoModel: state.videoModel),
             ],
           );
@@ -112,16 +117,14 @@ class _VideoPageState extends State<VideoPage>
   /// Create video player
   Widget _buildVideoPlayer(
       {List<VideoFormatModel>? videoFormats, required VideoModel videoModel}) {
-    if (videoFormats == null ||
-        videoFormats.length == 0 ||
-        videoFormats.where((element) => element.url == null).length > 0) {
+    if (isVideoPurchased(videoModel, videoFormats)) {
+      return VideoPlayerContainer(
+        videoModel: videoModel,
+      );
+    } else {
       return _buildVideoLocked(
           thumbnail: PathUtils.getImagePathWithId(
               accountId, 'video', videoModel.id, videoModel.imagePaths?[0]));
-    } else {
-      return VideoPlayerContainer(
-        videoFormats: videoFormats,
-      );
     }
   }
 
@@ -160,8 +163,7 @@ class _VideoPageState extends State<VideoPage>
   /// Create video status
   Widget _buildStatus({required VideoModel videoModel}) {
     String status = '';
-    // TODO: check if the video is purchased
-    if (videoModel.free != null && videoModel.free!) {
+    if (isVideoFree(videoModel)) {
       status = 'Free';
     } else if (videoModel.price != null) {
       status = '\$${videoModel.price}';
