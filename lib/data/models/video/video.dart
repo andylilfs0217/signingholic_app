@@ -20,28 +20,31 @@ class VideoModel {
   final String? createTime;
   final String? updateTime;
   final List? categories;
+  final bool? allowComments;
+  final bool? allowSubmissions;
 
-  VideoModel({
-    required this.id,
-    this.free,
-    this.status,
-    this.name,
-    this.nameLang,
-    this.description,
-    this.price,
-    this.discount,
-    this.discountPc,
-    this.youTubeId,
-    this.youTubePublishedAt,
-    this.tags,
-    this.imageIds,
-    this.imagePaths,
-    this.createTime,
-    this.updateTime,
-    this.featured,
-    this.descriptionLang,
-    this.categories,
-  });
+  VideoModel(
+      {required this.id,
+      this.free,
+      this.status,
+      this.name,
+      this.nameLang,
+      this.description,
+      this.price,
+      this.discount,
+      this.discountPc,
+      this.youTubeId,
+      this.youTubePublishedAt,
+      this.tags,
+      this.imageIds,
+      this.imagePaths,
+      this.createTime,
+      this.updateTime,
+      this.featured,
+      this.descriptionLang,
+      this.categories,
+      this.allowComments,
+      this.allowSubmissions});
 
   VideoModel.fromJson(Map<String, dynamic> json)
       : id = json['id'] is int ? json['id'] : int.parse(json['id']),
@@ -64,7 +67,9 @@ class VideoModel {
         updateTime = json['updateTime'],
         categories = json['categories']
             ?.map((e) => new VideoCategoryModel.fromJson(e))
-            .toList();
+            .toList(),
+        allowComments = json['allowComments'],
+        allowSubmissions = json['allowSubmissions'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -86,5 +91,7 @@ class VideoModel {
         'createTime': createTime,
         'updateTime': updateTime,
         'categories': categories?.map((e) => e.toJson()).toList(),
+        'allowComments': allowComments,
+        'allowSubmissions': allowSubmissions,
       };
 }

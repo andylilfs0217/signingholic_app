@@ -239,7 +239,9 @@ class _VideoPageState extends State<VideoPage>
     return Padding(
       padding:
           const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
-      child: VideoDiscussion(video: videoModel, isPurchased: isPurchased),
+      child: videoModel.allowComments ?? false
+          ? VideoDiscussion(video: videoModel, isPurchased: isPurchased)
+          : Text('Discussions are not available in this video.'),
     );
   }
 
@@ -248,7 +250,9 @@ class _VideoPageState extends State<VideoPage>
     return Padding(
       padding:
           const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
-      child: VideoSubmission(video: videoModel, isPurchased: isPurchased),
+      child: videoModel.allowSubmissions ?? false
+          ? VideoSubmission(video: videoModel, isPurchased: isPurchased)
+          : Text('Video submissions are not available in this video.'),
     );
   }
 
