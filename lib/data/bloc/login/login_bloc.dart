@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
 import 'package:singingholic_app/data/repo/login_repository.dart';
@@ -20,6 +23,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) async* {
     if (event is InitializeLoginEvent) {
       yield LoginInitialState();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? xsession = prefs.getString('xsession');
+      final String? memberString = prefs.getString('member');
+      if (xsession != null && memberString != null) {
+        final member = jsonDecode(memberString);
+        MemberModel memberModel = MemberModel.fromJson(member);
+        var storage = FlutterSecureStorage();
+        await storage.write(key: 'xsession', value: xsession);
+        yield LoginSuccessState(memberModel: memberModel);
+      }
     }
     // Login submitted event
     if (event is LoginSubmittedEvent) {
@@ -29,6 +42,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             email: event.email, password: event.password);
         if (response['succeed'] != null && response['succeed']) {
           MemberModel memberModel = MemberModel.fromJson(response['payload']);
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('member', jsonEncode(memberModel.toJson()));
           yield LoginSuccessState(memberModel: memberModel);
         } else {
           yield LoginFailedState();
@@ -42,6 +57,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is LogoutEvent) {
       yield LoginInitialState();
       try {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.remove('xsession');
+        await prefs.remove('member');
         await loginRepository.logout();
       } catch (e) {}
     }

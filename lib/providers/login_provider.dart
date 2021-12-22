@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 
@@ -29,6 +30,8 @@ class LoginProvider {
       final xsession = cookies.value;
       var storage = FlutterSecureStorage();
       await storage.write(key: 'xsession', value: xsession);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('xsession', xsession);
 
       var result = jsonDecode(response.body);
       return result;

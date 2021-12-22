@@ -13,13 +13,13 @@ import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
 import 'package:singingholic_app/views/error/oops_widget.dart';
 import 'package:singingholic_app/views/video/video_discussion.dart';
-import 'package:singingholic_app/views/video/video_player_container.dart';
 import 'package:singingholic_app/views/video/video_submission.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:singingholic_app/widgets/image_not_found.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 /// Video page
 class VideoPage extends StatefulWidget {
@@ -85,7 +85,7 @@ class _VideoPageState extends State<VideoPage>
           var _controller = YoutubePlayerController(
               initialVideoId: state.videoModel.youTubeId!,
               flags: YoutubePlayerFlags(
-                autoPlay: true,
+                autoPlay: false,
               ));
           return YoutubePlayerBuilder(
               player: YoutubePlayer(
@@ -93,6 +93,8 @@ class _VideoPageState extends State<VideoPage>
                 showVideoProgressIndicator: true,
               ),
               builder: (context, player) {
+                isPurchased =
+                    isVideoPurchased(state.videoModel, state.videoFormatModel);
                 return Scaffold(
                   appBar: AppAppBar(
                     appBar: AppBar(),
@@ -184,6 +186,8 @@ class _VideoPageState extends State<VideoPage>
     String status = '';
     if (isVideoFree(videoModel)) {
       status = 'Free';
+    } else if (isPurchased) {
+      status = 'Purchased';
     } else if (videoModel.price != null) {
       status = '\$${videoModel.price}';
     }
@@ -222,10 +226,12 @@ class _VideoPageState extends State<VideoPage>
   /// Create tab view of description
   Widget _buildDescription({required VideoModel videoModel}) {
     return Padding(
-      padding:
-          const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
-      child: Text(videoModel.description ?? ''),
-    );
+        padding:
+            const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
+        // child: Text(videoModel.description ?? ''),
+        child: videoModel.description == null
+            ? Text('')
+            : Html(data: videoModel.description));
   }
 
   /// Create tab view of discussion

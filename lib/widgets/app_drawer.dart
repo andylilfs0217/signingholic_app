@@ -15,9 +15,18 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
+        if (state is LoginInitialState) {
+          // Check login
+          context.read<LoginBloc>().add(InitializeLoginEvent());
+        }
         return Drawer(
           child: ListView(
             // Important: Remove any padding from the ListView.
