@@ -21,8 +21,15 @@ class VideoCommentDialog extends StatefulWidget {
   /// If not null, the user is replying another comment
   final VideoCommentModel? parentComment;
 
+  /// If true, the comment dialog allows rating input. Default false.
+  final bool allowRating;
+
   const VideoCommentDialog(
-      {Key? key, required this.video, required this.member, this.parentComment})
+      {Key? key,
+      required this.video,
+      required this.member,
+      this.parentComment,
+      this.allowRating = false})
       : super(key: key);
 
   @override
@@ -44,9 +51,19 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
     return _buildBody();
   }
 
+  /// Build the body widget of the comment dialog.
+  ///
+  /// The bloc in this widget listens to states and builds widgets.
+  /// For listener, the listener will show a toast notification to users on
+  /// submission of the comment.
+  /// For builder, it will build the comment dialog content when the bloc state
+  /// is not loading ([SendVideoCommentLoadingState]). Otherwise, it will build
+  /// a loading indicator.
   Widget _buildBody() {
     return BlocConsumer<CommentBloc, CommentState>(
       listener: (context, state) {
+        /// If the users successfully send the comment, show a toast
+        /// notification saying that "Sent comment successfully"
         if (state is SendVideoCommentSuccessState) {
           Navigator.of(context).pop(1);
           Fluttertoast.showToast(
@@ -55,6 +72,9 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
             backgroundColor: AppThemeColor.appPrimaryColor,
           );
         }
+
+        /// If the users failed to send the comment, show a toast
+        /// notification saying that "Send comment failed"
         if (state is SendVideoCommentFailState) {
           Fluttertoast.showToast(
             msg: 'Send comment failed',
@@ -64,12 +84,18 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
       builder: (context, state) {
         return AppDialog(
           child: Column(
+            // The height of the dialog fits the content
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildHeader(),
+              // If the state is loading, build the loading indicator.
               if (state is SendVideoCommentLoadingState) AppCircularLoading(),
+              // If the state is not loading, build the dialog body
               if (state is! SendVideoCommentLoadingState) ...[
-                if (widget.parentComment == null) ...[
+                /// If the comment is not replying to another comment,
+                /// i.e. replying to the video, and [widget.allowRating] is
+                /// true, build the rating bar
+                if (widget.parentComment == null && widget.allowRating) ...[
                   _buildRating(),
                   Divider(endIndent: 0),
                 ],
@@ -82,6 +108,8 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
     );
   }
 
+  /// Build the dialog header, including a close button, dialog title, and
+  /// the send comment button.
   Widget _buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,6 +125,7 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
         // Send button
         IconButton(
             onPressed: () {
+              /// Send the comment only if the comment field body is valid.
               if (_formKey.currentState!.validate())
                 context.read<CommentBloc>().add(SendVideoComment(
                     video: widget.video,
@@ -110,6 +139,7 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
     );
   }
 
+  /// Build the rating bar
   Widget _buildRating() {
     return RatingBar.builder(
       itemBuilder: (context, _) => Icon(Icons.star, color: Colors.amber),
@@ -126,6 +156,7 @@ class VideoCommentDialogState extends State<VideoCommentDialog> {
     );
   }
 
+  /// Build the comment text field.
   Widget _buildComment() {
     return Container(
       padding: EdgeInsets.all(AppThemeSize.screenPaddingSize),
