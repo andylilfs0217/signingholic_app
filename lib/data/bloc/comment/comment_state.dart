@@ -43,13 +43,13 @@ class SendVideoCommentSuccessState extends CommentState {
       required List<VideoCommentModel> videoCommentList})
       : super(videoCommentList: videoCommentList) {
     if (latestComment.parentComment == null)
-      videoCommentList.insert(0, latestComment);
+      videoCommentList.add(latestComment);
     else {
       videoCommentList
           .firstWhere(
               (element) => element.id == latestComment.parentComment!.id)
           .childrenComments
-          ?.insert(0, latestComment);
+          ?.add(latestComment);
     }
   }
 }
