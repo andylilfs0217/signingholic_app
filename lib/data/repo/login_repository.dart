@@ -9,9 +9,9 @@ class LoginRepository {
   Future<dynamic> login(
       {required String email, required String password}) async {
     try {
-      final videoListModel =
+      final res =
           await this.loginProvider.login(email: email, password: password);
-      return videoListModel;
+      return res;
     } catch (e) {
       throw Exception(e);
     }

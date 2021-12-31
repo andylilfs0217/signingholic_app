@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:singingholic_app/data/models/account/account.dart';
 import 'package:singingholic_app/data/models/member/member_tier.dart';
 import 'package:singingholic_app/data/models/product/product_cart.dart';
 import 'package:singingholic_app/data/models/video/video_cart.dart';
@@ -32,6 +33,7 @@ class MemberModel {
   String? resetDate;
   String? resetToken;
   MemberTierModel? tier;
+  AccountModel? account;
 
   MemberModel(
       {required this.id,
@@ -60,45 +62,49 @@ class MemberModel {
       this.videoCartSent,
       this.resetDate,
       this.resetToken,
-      this.tier});
+      this.tier,
+      this.account});
 
-  MemberModel.fromJson(Map<String, dynamic> jsons)
-      : id = jsons['id'] is int ? jsons['id'] : int.parse(jsons['id']),
-        active = jsons['active'],
-        name = jsons['name'],
-        email = jsons['email'],
-        type = jsons['type'],
-        mobile = jsons['mobile'],
-        address = jsons['address'],
-        birthday = jsons['birthday'],
-        data = jsons['data'],
-        password = jsons['password'],
-        tierStartDate = jsons['tierStartDate'],
-        signupToken = jsons['signupToken'],
-        createTime = jsons['createTime'],
-        updateTime = jsons['updateTime'],
-        points = jsons['points'],
-        productCart = jsons['productCart'] != null
-            ? ProductCartModel.fromJson(jsons['productCart'] is String
-                ? jsonDecode(jsons['productCart'])
-                : jsons['productCart'])
+  MemberModel.fromJson(Map<String, dynamic> json)
+      : id = json['id'] is int ? json['id'] : int.parse(json['id']),
+        active = json['active'],
+        name = json['name'],
+        email = json['email'],
+        type = json['type'],
+        mobile = json['mobile'],
+        address = json['address'],
+        birthday = json['birthday'],
+        data = json['data'],
+        password = json['password'],
+        tierStartDate = json['tierStartDate'],
+        signupToken = json['signupToken'],
+        createTime = json['createTime'],
+        updateTime = json['updateTime'],
+        points = json['points'],
+        productCart = json['productCart'] != null
+            ? ProductCartModel.fromJson(json['productCart'] is String
+                ? jsonDecode(json['productCart'])
+                : json['productCart'])
             : null,
-        productCartDate = jsons['productCartDate'],
-        productCartSent = jsons['productCartSent'],
-        eventCart = jsons['eventCart'],
-        eventCartDate = jsons['eventCartDate'],
-        eventCartSent = jsons['eventCartSent'],
-        videoCart = jsons['videoCart'] != null
-            ? VideoCartModel.fromJson(jsons['videoCart'] is String
-                ? jsonDecode(jsons['videoCart'])
-                : jsons['videoCart'])
+        productCartDate = json['productCartDate'],
+        productCartSent = json['productCartSent'],
+        eventCart = json['eventCart'],
+        eventCartDate = json['eventCartDate'],
+        eventCartSent = json['eventCartSent'],
+        videoCart = json['videoCart'] != null
+            ? VideoCartModel.fromJson(json['videoCart'] is String
+                ? jsonDecode(json['videoCart'])
+                : json['videoCart'])
             : null,
-        videoCartDate = jsons['videoCartDate'],
-        videoCartSent = jsons['videoCartSent'],
-        resetDate = jsons['resetDate'],
-        resetToken = jsons['resetToken'],
-        tier = jsons['tier'] != null
-            ? MemberTierModel.fromJson(jsons['tier'])
+        videoCartDate = json['videoCartDate'],
+        videoCartSent = json['videoCartSent'],
+        resetDate = json['resetDate'],
+        resetToken = json['resetToken'],
+        tier = json['tier'] != null
+            ? MemberTierModel.fromJson(json['tier'])
+            : null,
+        account = json['account'] != null
+            ? AccountModel.fromJson(json['account'])
             : null;
 
   Map<String, dynamic> toJson() {
@@ -132,6 +138,7 @@ class MemberModel {
     data['resetDate'] = this.resetDate;
     data['resetToken'] = this.resetToken;
     data['tier'] = this.tier != null ? this.tier!.toJson() : null;
+    data['account'] = this.account != null ? this.account!.toJson() : null;
     return data;
   }
 }

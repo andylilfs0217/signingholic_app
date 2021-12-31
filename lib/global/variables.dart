@@ -24,9 +24,9 @@ const Map<EnvironmentStage, String> ENV_NAMES = {
 };
 
 /// Current environment
-// const ENV = EnvironmentStage.development;
+const ENV = EnvironmentStage.development;
 // const ENV = EnvironmentStage.staging;
-const ENV = EnvironmentStage.production;
+// const ENV = EnvironmentStage.production;
 
 /// Global variables
 int bottomNavBarIndex = 0;

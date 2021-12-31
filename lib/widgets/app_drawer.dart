@@ -33,7 +33,6 @@ class _AppDrawerState extends State<AppDrawer> {
             padding: EdgeInsets.zero,
             children: [
               _buildDrawerHeader(),
-              // _buildSearchBar(),
               _buildHomeTile(),
               _buildShopTile(),
               _buildOnlineClassTile(),
@@ -163,9 +162,14 @@ class _AppDrawerState extends State<AppDrawer> {
               Text(state.memberModel.email ?? '',
                   style: Theme.of(context).textTheme.bodyText2),
               SizedBox(height: AppThemeSize.defaultItemHorizontalPaddingSize),
-              // Member points
-              Text('Points: ${state.memberModel.points ?? 0}',
-                  style: Theme.of(context).textTheme.bodyText2),
+
+              /// Member points. Show member points only if the member has a
+              /// point and the account enabled [memberPointsEnabled]
+              if (state.memberModel.points != null &&
+                  state.memberModel.account != null &&
+                  state.memberModel.account!.memberPointsEnabled)
+                Text('Points: ${state.memberModel.points}',
+                    style: Theme.of(context).textTheme.bodyText2),
             ],
           );
         }
