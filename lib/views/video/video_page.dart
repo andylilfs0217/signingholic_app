@@ -11,6 +11,7 @@ import 'package:singingholic_app/data/models/video/video_cart_item.dart';
 import 'package:singingholic_app/data/models/video/video_formats.dart';
 import 'package:singingholic_app/global/variables.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
+import 'package:singingholic_app/utils/video_utils.dart';
 import 'package:singingholic_app/views/error/oops_widget.dart';
 import 'package:singingholic_app/views/video/video_discussion.dart';
 import 'package:singingholic_app/views/video/video_submission.dart';
@@ -60,16 +61,6 @@ class _VideoPageState extends State<VideoPage>
     return _buildBody();
   }
 
-  bool isVideoFree(VideoModel videoModel) {
-    return videoModel.free != null && videoModel.free!;
-  }
-
-  bool isVideoPurchased(
-      VideoModel videoModel, List<VideoFormatModel>? videoFormats) {
-    return isVideoFree(videoModel) ||
-        (videoFormats != null && videoFormats.length > 0);
-  }
-
   /// Create page body
   Widget _buildBody() {
     return BlocBuilder<VideoBloc, VideoState>(
@@ -93,8 +84,8 @@ class _VideoPageState extends State<VideoPage>
                 showVideoProgressIndicator: true,
               ),
               builder: (context, player) {
-                isPurchased =
-                    isVideoPurchased(state.videoModel, state.videoFormatModel);
+                isPurchased = VideoUtils.isVideoPurchased(
+                    state.videoModel, state.videoFormatModel);
                 return Scaffold(
                   appBar: AppAppBar(
                     appBar: AppBar(),
@@ -114,7 +105,7 @@ class _VideoPageState extends State<VideoPage>
                       Expanded(
                           child:
                               _buildTabBarView(videoModel: state.videoModel)),
-                      if (!isVideoPurchased(
+                      if (!VideoUtils.isVideoPurchased(
                           state.videoModel, state.videoFormatModel))
                         _buildButtonBar(videoModel: state.videoModel),
                     ],
@@ -140,7 +131,7 @@ class _VideoPageState extends State<VideoPage>
       {List<VideoFormatModel>? videoFormats,
       required VideoModel videoModel,
       required Widget player}) {
-    if (isVideoPurchased(videoModel, videoFormats)) {
+    if (VideoUtils.isVideoPurchased(videoModel, videoFormats)) {
       return player;
     } else {
       return _buildVideoLocked(
@@ -184,7 +175,7 @@ class _VideoPageState extends State<VideoPage>
   /// Create video status
   Widget _buildStatus({required VideoModel videoModel}) {
     String status = '';
-    if (isVideoFree(videoModel)) {
+    if (VideoUtils.isVideoFree(videoModel)) {
       status = 'Free';
     } else if (isPurchased) {
       status = 'Purchased';
@@ -196,7 +187,9 @@ class _VideoPageState extends State<VideoPage>
           const EdgeInsets.all(AppThemeSize.defaultItemVerticalPaddingSize),
       child: Text(
         status,
-        style: TextStyle(fontSize: 14, color: Color(0xFF707070)),
+        style: TextStyle(
+            fontSize: 14,
+            color: isPurchased ? Colors.green : Color(0xFF707070)),
       ),
     );
   }

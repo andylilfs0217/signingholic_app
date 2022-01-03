@@ -7,12 +7,14 @@ import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/routes/app_router.dart';
 import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/utils/path_utils.dart';
+import 'package:singingholic_app/utils/video_utils.dart';
 import 'package:singingholic_app/widgets/app_appBar.dart';
 import 'package:singingholic_app/widgets/app_circular_loading.dart';
 import 'package:singingholic_app/widgets/app_scaffold.dart';
 import 'package:provider/provider.dart';
 import 'package:singingholic_app/widgets/app_video_search_bar.dart';
 import 'package:singingholic_app/widgets/item_card.dart';
+import 'package:singingholic_app/data/models/video/video.dart';
 
 /// Video list page that show all the videos in grid
 class VideoListPage extends StatefulWidget {
@@ -82,12 +84,12 @@ class _VideoListPageState extends State<VideoListPage> {
         crossAxisCount: 2,
         childAspectRatio: 9 / 14,
         primary: true,
-        children: state.videoList.results.map((e) {
+        children: state.videoList.results.map((VideoModel e) {
           // Add a tag "FREE" if the video is free
           // Add a price if the video is not free
           List tags = e.tags ?? [];
           String? subtitle;
-          if (e.free != null && e.free!) {
+          if (VideoUtils.isVideoFree(e)) {
             if (!tags.contains('FREE')) {
               tags.add('FREE');
             }
@@ -107,24 +109,25 @@ class _VideoListPageState extends State<VideoListPage> {
                     args: VideoArguments(id: e.id), then: () {
                   setState(() {});
                 });
-              });
+              },
+              videoModel: e);
         }).toList(),
       ),
     );
   }
 
   /// Create item card
-  Widget _buildItemCard({
-    double imageRatio = 16 / 9,
-    String? imageUrl,
-    List? categories,
-    required String title,
-    String? subtitle,
-    List? tags,
-    int categoryMaxLine = 1,
-    int titleMaxLine = 1,
-    Function()? onTap,
-  }) {
+  Widget _buildItemCard(
+      {double imageRatio = 16 / 9,
+      String? imageUrl,
+      List? categories,
+      required String title,
+      String? subtitle,
+      List? tags,
+      int categoryMaxLine = 1,
+      int titleMaxLine = 1,
+      Function()? onTap,
+      VideoModel? videoModel}) {
     return ItemCard(
       imageRatio: imageRatio,
       fit: BoxFit.cover,
@@ -136,6 +139,7 @@ class _VideoListPageState extends State<VideoListPage> {
       categoryMaxLine: categoryMaxLine,
       titleMaxLine: titleMaxLine,
       onTap: onTap,
+      videoModel: videoModel,
     );
   }
 

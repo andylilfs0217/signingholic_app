@@ -13,6 +13,7 @@ import 'package:singingholic_app/widgets/app_footer.dart';
 import 'package:singingholic_app/widgets/app_scaffold.dart';
 import 'package:singingholic_app/widgets/app_video_search_bar.dart';
 import 'package:singingholic_app/widgets/item_card.dart';
+import 'package:singingholic_app/data/models/video/video.dart';
 
 /// Home page
 class HomePage extends StatefulWidget {
@@ -164,7 +165,8 @@ class _HomePageState extends State<HomePage> {
                           args: VideoArguments(id: e.id), then: () {
                         setState(() {});
                       });
-                    });
+                    },
+                    videoModel: e);
               }).toList(),
             ),
           );
@@ -191,6 +193,7 @@ class _HomePageState extends State<HomePage> {
     int categoryMaxLine = 1,
     int titleMaxLine = 1,
     Function()? onTap,
+    VideoModel? videoModel,
   }) {
     return ItemCard(
       imageRatio: imageRatio,
@@ -204,6 +207,7 @@ class _HomePageState extends State<HomePage> {
       categoryMaxLine: categoryMaxLine,
       titleMaxLine: titleMaxLine,
       onTap: onTap,
+      videoModel: videoModel,
     );
   }
 
