@@ -42,3 +42,10 @@ class VideoSubmissionArguments {
       required this.member,
       required this.parentVideo});
 }
+
+// Arguments which will be passed to Profile Page
+class ProfileArguments {
+  final MemberModel memberModel;
+
+  const ProfileArguments({required this.memberModel});
+}

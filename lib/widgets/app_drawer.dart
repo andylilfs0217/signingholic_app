@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:singingholic_app/assets/app_theme.dart';
 import 'package:singingholic_app/data/bloc/login/login_bloc.dart';
+import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/routes/app_router.dart';
 import 'package:singingholic_app/utils/app_navigator.dart';
 import 'package:singingholic_app/widgets/app_login_button.dart';
@@ -153,6 +154,9 @@ class _AppDrawerState extends State<AppDrawer> {
                   TextButton(
                       onPressed: () {
                         print('Go to details');
+                        AppNavigator.drawerGoTo(context, AppRoute.PROFILE,
+                            args: ProfileArguments(
+                                memberModel: state.memberModel));
                       },
                       child: Text('Details'))
                 ],
