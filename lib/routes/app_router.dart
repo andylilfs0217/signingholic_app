@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:singingholic_app/data/models/member/member.dart';
 import 'package:singingholic_app/routes/app_arguments.dart';
 import 'package:singingholic_app/views/checkout/checkout_page.dart';
 import 'package:singingholic_app/views/contact_us/contact_us_page.dart';
@@ -8,6 +9,7 @@ import 'package:singingholic_app/views/home/home_page.dart';
 import 'package:singingholic_app/views/login/login_page.dart';
 import 'package:singingholic_app/views/login/sign_up_page.dart';
 import 'package:singingholic_app/views/payment/payment_page.dart';
+import 'package:singingholic_app/views/profile/profile_page.dart';
 import 'package:singingholic_app/views/settings/settings_page.dart';
 import 'package:singingholic_app/views/shopping_cart/shopping_cart_page.dart';
 import 'package:singingholic_app/views/upload/upload_page.dart';
@@ -29,6 +31,7 @@ class AppRoute {
   static const PAYMENT = '/payment';
   static const SIGN_UP = '/sign-up';
   static const VIDEO_SUBMISSION = '/video-submission';
+  static const PROFILE = '/profile';
 }
 
 class AppRouteGenerator {
@@ -76,6 +79,10 @@ class AppRouteGenerator {
                 fileName: args.fileName,
                 member: args.member,
                 parentVideo: args.parentVideo));
+      case AppRoute.PROFILE:
+        final args = settings.arguments as ProfileArguments;
+        return MaterialPageRoute(
+            builder: (_) => ProfilePage(memberModel: args.memberModel));
       default:
         return MaterialPageRoute(builder: (_) => PageNotFoundPage());
     }
