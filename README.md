@@ -1,6 +1,6 @@
 # singingholic_app
 
-A new Flutter project.
+Circle Studio App
 
 ## Getting Started
 
