@@ -9,7 +9,7 @@
     <!-- Required to fetch data from the internet. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="singingholic_app"
         android:icon="@mipmap/ic_launcher">
         <activity
